@@ -74,6 +74,7 @@ void SNXProcess::init() {
     env.insert("HOME",user_dir());
     env.insert("TERM","xterm-256color");
     env.insert("USER","root");
+    env.insert("XAUTHORITY","/home/alex/.Xauthority");
     QList<int> xs = x_displays();
     if (!xs.isEmpty()) env.insert("DISPLAY",QString(":%1").arg(xs[0]));
     m_process.setProcessEnvironment(env);
