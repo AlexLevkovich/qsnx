@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pics/checkpoint-vpn.png</file>
+        <file>pics/key.svg</file>
+        <file>pics/key_grey.svg</file>
+    </qresource>
+</RCC>

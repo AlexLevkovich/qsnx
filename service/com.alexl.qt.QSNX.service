@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=com.alexl.qt.QSNX
+Exec=/usr/bin/qsnx_service
+User=root

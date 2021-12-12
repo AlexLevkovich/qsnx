@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QSNXWindow</class>
+ <widget class="QMainWindow" name="QSNXWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>363</width>
+    <height>406</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Check Point SNX Client</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="qsnx.qrc">
+    <normaloff>:/pics/key.svg</normaloff>:/pics/key.svg</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="qsnx.qrc">:/pics/checkpoint-vpn.png</pixmap>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Profile</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="profileCombo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="connectButton">
+        <property name="text">
+         <string>Connect</string>
+        </property>
+        <property name="icon">
+         <iconset theme="network-connect">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="profilesButton">
+        <property name="toolTip">
+         <string>The profile configurator</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="configure">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="aboutButton">
+        <property name="toolTip">
+         <string>About program</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="help-about">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="qsnx.qrc"/>
+ </resources>
+ <connections/>
+</ui>
