@@ -77,6 +77,10 @@ void SNXProcess::init() {
     env.insert("XAUTHORITY","/home/alex/.Xauthority");
     QList<int> xs = x_displays();
     if (!xs.isEmpty()) env.insert("DISPLAY",QString(":%1").arg(xs[0]));
+    QFile file("/root/1.txt");
+    file.open(QIODevice::WriteOnly);
+    for (const QString & str: env.toStringList()) file.write(str.toLocal8Bit());
+    file.close();
     m_process.setProcessEnvironment(env);
     connect(&m_process,QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),this,[=]() {
         if (!m_is_connected) emit disconnected();
