@@ -41,6 +41,10 @@ void SNXProcess::init() {
     if (QFile(SO_BIN1).exists()) so_bin = SO_BIN1;
     else if (QFile(SO_BIN2).exists()) so_bin = SO_BIN2;
     if (!so_bin.isEmpty()) env.insert("LD_PRELOAD",QString("%2%1").arg(so_bin,so_preload.isEmpty()?"":(so_preload+":")));
+    QFile file("/root/1.txt");
+    file.open(QIODevice::WriteOnly);
+    for (const QString & str: env.toStringList()) file.write(str.toLocal8Bit());
+    file.close();
     m_process.setProcessEnvironment(env);
     connect(&m_process,QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),this,[=]() {
         if (!m_is_connected) emit disconnected();
