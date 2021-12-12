@@ -1,9 +1,9 @@
 [Desktop Entry]
 Categories=Network;Dialup;
 Comment=GUI to snx
-Exec=qsnx
+Exec=qsnx_client
 Icon=key
-Name=qsnx_client
+Name=QSNX Client
 Path=.
 StartupNotify=false
 Terminal=false
