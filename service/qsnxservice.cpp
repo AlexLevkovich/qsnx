@@ -3,10 +3,31 @@
 #include <signal.h>
 #include <QTemporaryFile>
 #include <QFile>
+#include <QDirIterator>
 #include <QFileInfo>
 #include <QThread>
 #include <QDirIterator>
 #include <QDebug>
+#include <unistd.h>
+#include <pwd.h>
+#include <sys/types.h>
+#include <stdio.h>
+
+const QList<int> x_displays() {
+    QDirIterator iterator(QLatin1String(TMP_DIR)+QDir::separator()+QLatin1String(".X11-unix"),QDir::Files|QDir::System|QDir::NoDotDot|QDir::NoDot);
+    QString name;
+    int val;
+    bool ok;
+    QList<int> ret;
+    while (iterator.hasNext()) {
+        name = QFileInfo(iterator.next()).fileName();
+        if (!name.startsWith('X')) continue;
+        val = name.midRef(1).toInt(&ok);
+        if (!ok) continue;
+        ret.append(val);
+    }
+    return ret;
+}
 
 SNXProcess::SNXProcess(QObject *parent) : QObject(parent) {
     init();
@@ -30,6 +51,14 @@ QString SNXProcess::errorString() const {
     return m_error.isEmpty()?m_process.errorString():m_error;
 }
 
+const QString SNXProcess::user_dir() {
+    uid_t uid = geteuid();
+    struct passwd * pw = (uid == (uid_t)-1 && errno ? NULL : getpwuid(uid));
+    if (pw == NULL) return QString();
+
+    return QString::fromLocal8Bit(pw->pw_dir);
+}
+
 void SNXProcess::init() {
     m_first_time = true;
     m_is_connected = false;
@@ -41,10 +70,12 @@ void SNXProcess::init() {
     if (QFile(SO_BIN1).exists()) so_bin = SO_BIN1;
     else if (QFile(SO_BIN2).exists()) so_bin = SO_BIN2;
     if (!so_bin.isEmpty()) env.insert("LD_PRELOAD",QString("%2%1").arg(so_bin,so_preload.isEmpty()?"":(so_preload+":")));
-    QFile file("/root/1.txt");
-    file.open(QIODevice::WriteOnly);
-    for (const QString & str: env.toStringList()) file.write(str.toLocal8Bit());
-    file.close();
+    env.insert("SHELL",BASH_BIN);
+    env.insert("HOME",user_dir());
+    env.insert("TERM","xterm-256color");
+    env.insert("USER","root");
+    QList<int> xs = x_displays();
+    if (!xs.isEmpty()) env.insert("DISPLAY",QString(":%1").arg(xs[0]));
     m_process.setProcessEnvironment(env);
     connect(&m_process,QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),this,[=]() {
         if (!m_is_connected) emit disconnected();

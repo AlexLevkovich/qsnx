@@ -37,6 +37,7 @@ private:
     bool check_parameters();
     void analyze_line(const QByteArray & line);
     bool write_data(const char * data);
+    static const QString user_dir();
 
     QProcess m_process;
     QString m_password;

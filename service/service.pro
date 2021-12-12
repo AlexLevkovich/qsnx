@@ -33,6 +33,15 @@ isEmpty(USER_SWITCH) {
 }
 DEFINES += USER_SWITCH=\\\"$$USER_SWITCH\\\"
 
+isEmpty(TMP_DIR) {
+    TMP_DIR = /tmp
+}
+DEFINES += TMP_DIR=\\\"$$TMP_DIR\\\"
+
+BASH_BIN = $$system(which bash 2>/dev/null)
+isEmpty( BASH_BIN ):error( "bash should be installed!!!" )
+DEFINES += BASH_BIN=\\\"$$BASH_BIN\\\"
+
 TRANS_DIR1 = $$OUT_PWD/translations
 TRANS_DIR2 = $$INSTALL_PREFIX/share/qsnx
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
