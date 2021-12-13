@@ -47,19 +47,6 @@ void SNXProcess::init() {
     m_first_time = true;
     m_is_connected = false;
     m_process.setProgram(SNX_PATH);
-    m_process.setProcessChannelMode(QProcess::MergedChannels);
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    QString so_preload = env.value("LD_PRELOAD");
-    QString so_bin;
-    if (QFile(SO_BIN1).exists()) so_bin = SO_BIN1;
-    else if (QFile(SO_BIN2).exists()) so_bin = SO_BIN2;
-    if (!so_bin.isEmpty()) env.insert("LD_PRELOAD",QString("%2%1").arg(so_bin,so_preload.isEmpty()?"":(so_preload+":")));
-    env.insert("SHELL",BASH_BIN);
-    env.insert("HOME",user_dir());
-    env.insert("TERM","linux");
-    env.insert("USER","root");
-    env.insert("SHLVL","1");
-    m_process.setProcessEnvironment(env);
     connect(&m_process,QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),this,[=]() {
         if (!m_is_connected) emit disconnected();
         else {
@@ -68,7 +55,7 @@ void SNXProcess::init() {
         }
     });
     connect(&m_process,&QProcess::errorOccurred,(QSNXService *)parent(),[=]{ emit ((QSNXService *)parent())->error(m_process.errorString()); });
-    connect(&m_process,&QProcess::readyReadStandardOutput,this,[=]() { while (m_process.canReadLine()) analyze_line(m_process.readLine()); });
+    connect(&m_process,&QProcess::readyRead,this,[=]() { while (m_process.canReadLine()) analyze_line(m_process.readLine()); });
     connect(&m_process,&QProcess::errorOccurred,this,[=](){ emit errorOccurred(m_process.errorString()); });
     connect(this,&SNXProcess::disconnected,this,[=](){ m_is_connected = false; m_connected_info.clear(); deleteLater(); });
     connect(this,&SNXProcess::connected,this,[=](){ m_is_connected = true; m_connected_info.clear(); });
@@ -182,6 +169,7 @@ void SNXProcess::analyze_line(const QByteArray & array) {
     m_error.clear();
     QString line = QString::fromLatin1(array);
     if (line.endsWith(QLatin1Char('\n'))) line = line.left(line.length()-1);
+    if (line.endsWith(QLatin1Char('\r'))) line = line.left(line.length()-1);
     qDebug() << line;
     if (m_first_time && line != QLatin1String("Check Point's Linux SNX") && line != QLatin1String("SNX - Disconnecting...")) {
         m_error = line;

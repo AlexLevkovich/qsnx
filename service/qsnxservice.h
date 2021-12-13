@@ -3,8 +3,7 @@
 
 #include <QObject>
 #include <QDBusContext>
-#include <QProcess>
-#include <QTemporaryFile>
+#include "qptyprocess.h"
 
 class SNXProcess: public QObject {
     Q_OBJECT
@@ -39,7 +38,7 @@ private:
     bool write_data(const char * data);
     static const QString user_dir();
 
-    QProcess m_process;
+    QPtyProcess m_process;
     QString m_password;
     QString m_username;
     QString m_certificate;

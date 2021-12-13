@@ -64,7 +64,10 @@ DEFINES += SNX_PATH=\\\"$$SNX_PATH\\\"
 DBUS_ADAPTORS = ../qsnx.xml
 
 SOURCES += \
+        kpty.cpp \
+        kptydevice.cpp \
         main.cpp \
+        qptyprocess.cpp \
         qsnxservice.cpp \
         sigwatch.cpp \
         singleapplication.cpp \
@@ -76,10 +79,17 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    config-pty.h \
+    kpty.h \
+    kpty_p.h \
+    kptydevice.h \
+    qptyprocess.h \
     qsnxservice.h \
     sigwatch.h \
     singleapplication.h \
     singleapplication_p.h
+
+LIBS += -lutil
 
 LANGUAGES = ru be
 
