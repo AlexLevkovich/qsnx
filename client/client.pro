@@ -95,5 +95,8 @@ icon.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/pixmaps/
 desktop.files = $$PWD/qsnx.desktop
 desktop.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/applications/
 
+metainfo.files = $$PWD/qsnx.metainfo.xml
+metainfo.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/metainfo/
+
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
-INSTALLS += target transinstall icon desktop
+INSTALLS += target transinstall icon desktop metainfo

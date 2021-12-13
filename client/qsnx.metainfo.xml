@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>qsnx</id>
+
+    <name>QSNX Client</name>
+    <summary>A Check Point VPN client powered by SNX</summary>
+
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL-3.0-or-later</project_license>
+
+    <description>
+        <p>A Check Point VPN client (GUI) for Linux based on SNX and built with Qt5.</p>
+    </description>
+
+    <categories>
+        <category>Network</category>
+    </categories>
+
+    <update_contact>alevkovich@tut.by</update_contact>
+    <developer_name>Alex Levkovich</developer_name>
+
+    <url type="homepage">https://github.com/AlexLevkovich/qsnx</url>
+    <url type="bugtracker">https://github.com/AlexLevkovich/qsnx/issues</url>
+    <url type="help">https://github.com/AlexLevkovich/qsnx/issues</url>
+
+    <keywords>
+        <keyword>snx</keyword>
+        <keyword>vpn</keyword>
+    </keywords>
+
+    <launchable type="desktop-id">qsnx.desktop</launchable>
+    <screenshots>
+        <screenshot type="default">
+            <image>https://raw.githubusercontent.com/AlexLevkovich/qsnx/main/client/pics/key.svg</image>
+        </screenshot>
+    </screenshots>
+    <provides>
+        <binary>/usr/bin/qsnx_client</binary>
+        <dbus type="system">com.alexl.qt.QSNX</dbus>
+    </provides>
+</component>
