@@ -64,7 +64,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../profiledialog.cpp" line="+309"/>
+        <location filename="../profiledialog.cpp" line="+313"/>
         <source>New connection</source>
         <translation type="unfinished">Новае злучэнне</translation>
     </message>
@@ -93,7 +93,7 @@
     </message>
     <message>
         <location/>
-        <location filename="../qsnxwindow.cpp" line="+212"/>
+        <location filename="../qsnxwindow.cpp" line="+222"/>
         <location line="+7"/>
         <source>Connect</source>
         <translation type="unfinished">Злучыцца</translation>
@@ -128,7 +128,7 @@
 <context>
     <name>SNXSystemTrayIcon</name>
     <message>
-        <location filename="../qsnxwindow.cpp" line="-205"/>
+        <location filename="../qsnxwindow.cpp" line="-211"/>
         <source>Show window</source>
         <translation type="unfinished">Паказаць акно</translation>
     </message>
@@ -148,7 +148,13 @@
         <translation type="unfinished">Выхад</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+3"/>
+        <location line="+46"/>
+        <source>disconnected</source>
+        <translation type="unfinished">адключаны</translation>
+    </message>
+    <message>
+        <location line="-28"/>
         <source>About QSNX Client...</source>
         <translation type="unfinished">Аб QSNX Client...</translation>
     </message>
@@ -173,9 +179,24 @@
         <translation type="unfinished">snx вярнула памылку</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+5"/>
+        <source>connected to </source>
+        <translation type="unfinished">падключаны да </translation>
+    </message>
+    <message>
+        <location line="+23"/>
         <source>Connect to</source>
         <translation type="unfinished">Злучыцца з</translation>
+    </message>
+    <message>
+        <location line="+35"/>
+        <source>connecting to </source>
+        <translation type="unfinished">падключэнне да </translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>disconnecting from </source>
+        <translation type="unfinished">адключэнне ад </translation>
     </message>
 </context>
 </TS>

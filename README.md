@@ -5,7 +5,6 @@ It contains four subprojects:
 
 **qsnx_service** - dbus service  
 **qsnx_client**  - main client program  
-**setbuf**  - a helper to disable buffering for stdin, stdout and stderr  
 
 # COMPILATION:
 

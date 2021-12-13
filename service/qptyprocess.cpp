@@ -1,13 +1,13 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #include "qptyprocess.h"
 #include <unistd.h>
 #include <pwd.h>
 #include <kptydevice.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-//////////////////
-// private data //
-//////////////////
 
 const QString user_name() {
     uid_t uid = geteuid();
@@ -32,6 +32,9 @@ QPtyProcess::QPtyProcess(int ptyMasterFd, QObject *parent) : QProcess(parent) {
         if (state == QProcess::NotRunning) m_pty->logout();
     });
     connect(m_pty,&KPtyDevice::readyRead,this,&QPtyProcess::readyRead);
+    connect(m_pty,&KPtyDevice::readyRead,this,[=]() {
+        QMetaObject::invokeMethod(this,"readyReadStandardOutput",Qt::QueuedConnection);
+    });
     connect(m_pty,&KPtyDevice::bytesWritten,this,&QPtyProcess::bytesWritten);
 }
 

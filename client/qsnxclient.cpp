@@ -1,3 +1,7 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #include "qsnxclient.h"
 #include "qsnx_interface.h"
 #include <QDBusServiceWatcher>

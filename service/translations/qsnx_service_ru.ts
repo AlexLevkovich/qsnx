@@ -4,7 +4,7 @@
 <context>
     <name>SNXProcess</name>
     <message>
-        <location filename="../qsnxservice.cpp" line="+123"/>
+        <location filename="../qsnxservice.cpp" line="+127"/>
         <source>Username and certificate file path cannot be both empty!</source>
         <translation type="unfinished">Имя пользователя и путь к файлу сертификата не могут быть одновременно пустыми!</translation>
     </message>

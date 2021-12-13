@@ -1,3 +1,7 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #include "qsnxwindow.h"
 #include "ui_qsnxwindow.h"
 #include "profiledialog.h"
@@ -25,6 +29,7 @@ SNXSystemTrayIcon::SNXSystemTrayIcon() : QSystemTrayIcon(QCoreApplication::insta
     exit_action = menu->addAction(QIcon::fromTheme("application-exit"),tr("Exit"));
     setContextMenu(menu);
     setIcon(QIcon(QIcon("://pics/key_grey.svg").pixmap(128)));
+    setToolTip("QSNX Client :"+tr("disconnected"));
     disconnect_action->setEnabled(isConnected());
     connect_menu->setEnabled(isDisconnected());
 
@@ -62,6 +67,7 @@ SNXSystemTrayIcon::SNXSystemTrayIcon() : QSystemTrayIcon(QCoreApplication::insta
     QObject::connect(&m_client,&QSNXClient::connected,this,[=]() {
         m_state = Connected;
         setIcon(QIcon(QIcon("://pics/key.svg").pixmap(128)));
+        setToolTip("QSNX Client :"+tr("connected to ")+m_profile_name);
         connect_menu->setEnabled(false);
         disconnect_action->setEnabled(true);
         emit connected();
@@ -69,6 +75,7 @@ SNXSystemTrayIcon::SNXSystemTrayIcon() : QSystemTrayIcon(QCoreApplication::insta
     QObject::connect(&m_client,&QSNXClient::disconnected,this,[=]() {
         m_state = Disconnected;
         setIcon(QIcon(QIcon("://pics/key_grey.svg").pixmap(128)));
+        setToolTip("QSNX Client :"+tr("disconnected"));
         connect_menu->setEnabled(true);
         disconnect_action->setEnabled(false);
         emit disconnected();
@@ -116,7 +123,9 @@ QWindow * SNXSystemTrayIcon::findWindow(const QString & title) {
 }
 
 void SNXSystemTrayIcon::connect(const QString & name) {
+    m_profile_name = name;
     m_state = Connecting;
+    setToolTip("QSNX Client :"+tr("connecting to ")+m_profile_name);
     connect_menu->setEnabled(false);
     disconnect_action->setEnabled(false);
     emit connecting();
@@ -128,6 +137,7 @@ void SNXSystemTrayIcon::connect(const QString & name) {
 void SNXSystemTrayIcon::disconnect() {
     m_state = Disconnecting;
     connect_menu->setEnabled(false);
+    setToolTip("QSNX Client :"+tr("disconnecting from ")+m_profile_name);
     disconnect_action->setEnabled(false);
     emit disconnecting();
     m_client.disconnect();

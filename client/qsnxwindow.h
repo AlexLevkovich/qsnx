@@ -1,3 +1,7 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #ifndef QSNXWINDOW_H
 #define QSNXWINDOW_H
 
@@ -55,6 +59,7 @@ private:
     QSNXWindow * m_window;
     State m_state;
     QSNXClient m_client;
+    QString m_profile_name;
 };
 
 class QSNXWindow : public QMainWindow {

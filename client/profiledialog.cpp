@@ -1,3 +1,7 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #include "profiledialog.h"
 #include "ui_profiledialog.h"
 #include "confreader.h"
