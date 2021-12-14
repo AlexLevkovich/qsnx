@@ -83,7 +83,10 @@ void SNXProcess::forked() {
 
 void SNXProcess::terminate() {
     if (m_process.state() == QProcess::Running || m_process.state() == QProcess::Starting) {
+        m_process.blockSignals(true);
         m_process.kill();
+        if (m_process.state() == QProcess::Running) m_process.waitForFinished();
+        emit disconnected();
         return;
     }
     if (!m_is_connected) return;
