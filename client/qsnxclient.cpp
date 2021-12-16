@@ -4,23 +4,11 @@
 ********************************************************************************/
 #include "qsnxclient.h"
 #include "qsnx_interface.h"
-#include <QDBusServiceWatcher>
 
 QSNXClient::QSNXClient(QObject *parent) : QObject(parent) {
     m_interface = new ComAlexlQtQSNXInterface(ComAlexlQtQSNXInterface::staticInterfaceName(),"/",QDBusConnection::systemBus(),this);
-    if (!m_interface->isValid()) {
-        QTimer::singleShot(5000,this,[&]() {
-           if (m_watcher == NULL) return;
-           qApp->quit();
-        });
-        m_watcher = new QDBusServiceWatcher(ComAlexlQtQSNXInterface::staticInterfaceName(),QDBusConnection::systemBus(),QDBusServiceWatcher::WatchForRegistration,this);
-        QObject::connect(m_watcher,&QDBusServiceWatcher::serviceRegistered,this,[&]() {m_watcher->deleteLater();m_watcher=NULL;init();});
-        return;
-    }
-    init();
-}
+    m_interface->connection().interface()->startService(ComAlexlQtQSNXInterface::staticInterfaceName());
 
-void QSNXClient::init() {
     QObject::connect(m_interface,&ComAlexlQtQSNXInterface::passwordRequested,this,&QSNXClient::passwordRequested);
     QObject::connect(m_interface,&ComAlexlQtQSNXInterface::connected,this,&QSNXClient::connected);
     QObject::connect(m_interface,&ComAlexlQtQSNXInterface::disconnected,this,&QSNXClient::disconnected);

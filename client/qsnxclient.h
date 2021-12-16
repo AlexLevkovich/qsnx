@@ -9,7 +9,6 @@
 #include <QDBusPendingReply>
 
 class ComAlexlQtQSNXInterface;
-class QDBusServiceWatcher;
 
 class QSNXClient : public QObject {
     Q_OBJECT
@@ -30,7 +29,6 @@ signals:
     void error(const QString &str);
 
 private:
-    void init();
     template<typename T> bool replyToValue(const QDBusPendingReply<T> & in_reply,T & ret) const {
         QSNXClient * p_this = (QSNXClient *)this;
         QDBusPendingReply<T> & reply = (QDBusPendingReply<T> &)in_reply;
@@ -55,7 +53,6 @@ private:
     }
 
     ComAlexlQtQSNXInterface * m_interface;
-    QDBusServiceWatcher * m_watcher;
 };
 
 #endif // QSNXCLIENT_H
