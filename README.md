@@ -21,6 +21,6 @@ You can use **CONFIG+=DISCONNECT_SWITCH=value**, **CONFIG+=URL_SWITCH=value**, *
 
 **QT5 only**  
 
-Depends: '**Qt >= 5: core,network,gui,dbus,widgets,svg**', '**snx**' and '**gawk**' as a makedepend. 
+Depends: '**Qt >= 5: core,network,gui,dbus,widgets,svg**', '**snx**'. 
   
 
