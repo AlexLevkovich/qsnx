@@ -197,18 +197,19 @@ void SNXProcess::analyze_line(const QByteArray & array) {
 }
 
 QSNXService::QSNXService(QObject *parent) : QObject(parent) {
+    m_process = NULL;
     new QSNXAdaptor(this);
     QDBusConnection dbus = QDBusConnection::systemBus();
     if (!dbus.registerObject("/", this)) {
         qDebug() << "Cannot register QSNXService object!" << dbus.lastError();
         exit(1);
+        return;
     }
     if (!dbus.registerService("com.alexl.qt.QSNX")) {
         qDebug() << "Cannot register QSNXService service!" << dbus.lastError();
         exit(1);
+        return;
     }
-
-    m_process = NULL;
 }
 
 QSNXService::~QSNXService() {

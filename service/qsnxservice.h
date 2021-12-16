@@ -54,16 +54,19 @@ private:
 
 class QSNXService : public QObject, QDBusContext {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "com.alexl.qt.QSNX")
 public:
     explicit QSNXService(QObject *parent = nullptr);
     ~QSNXService();
-    Q_INVOKABLE void connect(const QString &url,const QString &certificate,int port);
-    Q_INVOKABLE void connect(const QString &url,const QString &username,const QString &password,int port);
-    Q_INVOKABLE void disconnect();
-    Q_INVOKABLE bool isConnected();
-    Q_INVOKABLE QString sessionInfo();
-    Q_INVOKABLE void sendPassword(const QString & password);
-    Q_INVOKABLE void terminate();
+
+public slots:
+    void connect(const QString &url,const QString &certificate,int port);
+    void connect(const QString &url,const QString &username,const QString &password,int port);
+    void disconnect();
+    bool isConnected();
+    QString sessionInfo();
+    void sendPassword(const QString & password);
+    void terminate();
 signals:
     void passwordRequested();
     void connected();

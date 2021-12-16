@@ -17,7 +17,7 @@
 <context>
     <name>QSNXService</name>
     <message>
-        <location line="+78"/>
+        <location line="+79"/>
         <source> is already running. Stop or kill it first.</source>
         <translation type="unfinished"> уже работает. Сначала остановите или убейте его.</translation>
     </message>
