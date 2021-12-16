@@ -129,16 +129,11 @@ transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
 transinstall.CONFIG += no_check_exist
 transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
-fileschange1.target = com.alexl.qt.QSNX.service
-fileschange1.depends = FORCE
-fileschange1.commands = cd $$PWD; cat com.alexl.qt.QSNX.service.orig | awk -v f="/usr/bin/" -v t="$$INSTALL_PREFIX/bin/" \'{if (substr(t,1,2) == \"//\") {t=substr(t,2)}; gsub(f,t);print \$0}\' > com.alexl.qt.QSNX.service
-PRE_TARGETDEPS += com.alexl.qt.QSNX.service
-QMAKE_EXTRA_TARGETS += fileschange1
-fileschange2.target = qsnx.service
-fileschange2.depends = FORCE
-fileschange2.commands = cd $$PWD; cat qsnx.service.orig | awk -v f="/usr/bin/" -v t="$$INSTALL_PREFIX/bin/" \'{if (substr(t,1,2) == \"//\") {t=substr(t,2)}; gsub(f,t);print \$0}\' > qsnx.service
-PRE_TARGETDEPS += qsnx.service
-QMAKE_EXTRA_TARGETS += fileschange2
+fileschange1.input = com.alexl.qt.QSNX.service.in
+fileschange1.output = $$OUT_PWD/com.alexl.qt.QSNX.service
+fileschange2.input = qsnx.service.in
+fileschange2.output = $$OUT_PWD/qsnx.service
+QMAKE_SUBSTITUTES += fileschange1 fileschange2
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
 INSTALLS += target transinstall
@@ -152,9 +147,9 @@ dbus_config.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/dbus-1/system.d/
 dbus_config.files = com.alexl.qt.QSNX.conf
 
 dbus_service.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/dbus-1/system-services/
-dbus_service.files = com.alexl.qt.QSNX.service
+dbus_service.files = $$OUT_PWD/com.alexl.qt.QSNX.service
 
 systemd_service.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/systemd/system/
-systemd_service.files = qsnx.service
+systemd_service.files = $$OUT_PWD/qsnx.service
 
 INSTALLS += dbus_config dbus_service systemd_service

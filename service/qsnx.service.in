@@ -4,7 +4,7 @@ Description=QSNX DBus service
 [Service]
 Type=dbus
 BusName=com.alexl.qt.QSNX
-ExecStart=/usr/bin/qsnx_service
+ExecStart=$$INSTALL_PREFIX/bin/qsnx_service
 
 [Install]
 WantedBy=multi-user.target
