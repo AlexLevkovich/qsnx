@@ -8,7 +8,7 @@ isEmpty(INSTALL_PREFIX) {
     INSTALL_PREFIX = /usr
 }
 
-isEmpty(DISCONNECT_SWITCH) {
+isEmpty(DISCONNECT_SWITCH) {f
     DISCONNECT_SWITCH = -d
 }
 DEFINES += DISCONNECT_SWITCH=\\\"$$DISCONNECT_SWITCH\\\"
@@ -38,10 +38,6 @@ isEmpty(TMP_DIR) {
 }
 DEFINES += TMP_DIR=\\\"$$TMP_DIR\\\"
 
-BASH_BIN = $$system(which bash 2>/dev/null)
-isEmpty( BASH_BIN ):error( "bash should be installed!!!" )
-DEFINES += BASH_BIN=\\\"$$BASH_BIN\\\"
-
 TRANS_DIR1 = $$OUT_PWD/translations
 TRANS_DIR2 = $$INSTALL_PREFIX/share/qsnx
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
@@ -50,14 +46,9 @@ DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
 DEFINES += QAPPLICATION_CLASS=QCoreApplication
 DEFINES += QT_DEPRECATED_WARNINGS
 
-SO_BIN1=$$INSTALL_PREFIX/lib/libsetbuf.so
-SO_BIN2=$$OUT_PWD/../setbuf/libsetbuf.so
-DEFINES += SO_BIN1=\\\"$$SO_BIN1\\\"
-DEFINES += SO_BIN2=\\\"$$SO_BIN2\\\"
-
 #SNX_PATH should be a full path to snx executable
 isEmpty(SNX_PATH) {
-    SNX_PATH = /usr/bin/snx
+    SNX_PATH = $$INSTALL_PREFIX/bin/snx
 }
 DEFINES += SNX_PATH=\\\"$$SNX_PATH\\\"
 
