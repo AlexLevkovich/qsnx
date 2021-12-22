@@ -3,5 +3,14 @@
         <file>pics/checkpoint-vpn.png</file>
         <file>pics/key.svg</file>
         <file>pics/key_grey.svg</file>
+        <file>icons/application-exit.svg</file>
+        <file>icons/edit-entry.svg</file>
+        <file>icons/entry-delete.svg</file>
+        <file>icons/entry-new.svg</file>
+        <file>icons/help-about.svg</file>
+        <file>icons/network-connect.svg</file>
+        <file>icons/network-disconnect.svg</file>
+        <file>icons/network-vpn.svg</file>
+        <file>icons/window.svg</file>
     </qresource>
 </RCC>
