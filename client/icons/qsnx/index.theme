@@ -1,0 +1,11 @@
+[Icon Theme]
+Name=qsnx
+Comment=A minimal qsnx theme
+Inherits=hicolor
+
+Directories=scalable/actions 
+
+[scalable/actions]
+Size=256
+Context=Actions
+Type=Scalable

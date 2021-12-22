@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName("AlexL");
     QCoreApplication::setApplicationName("qsnx_client");
 
+    QIcon::setFallbackThemeName("qsnx");
     SingleApplication app(argc, argv,false,SingleApplication::System);
 
     QTranslator * m_translator = new QTranslator(QCoreApplication::instance());
