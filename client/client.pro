@@ -1,7 +1,5 @@
-QT       += core gui dbus network svg
+QT       += core gui dbus network widgets
 TARGET = qsnx_client
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 DEFINES += QAPPLICATION_CLASS=QApplication

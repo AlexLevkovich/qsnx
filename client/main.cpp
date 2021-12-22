@@ -11,8 +11,10 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName("AlexL");
     QCoreApplication::setApplicationName("qsnx_client");
 
-    QIcon::setFallbackThemeName("qsnx");
     SingleApplication app(argc, argv,false,SingleApplication::System);
+    qDebug() << QIcon::themeName();
+    QIcon::setThemeName(QIcon::themeName());
+    QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << "://pics");
 
     QTranslator * m_translator = new QTranslator(QCoreApplication::instance());
     if(!m_translator->load(QLocale::system(),"qsnx_client","_",TRANS_DIR1)) m_translator->load(QLocale::system(),"qsnx_client","_",TRANS_DIR2);

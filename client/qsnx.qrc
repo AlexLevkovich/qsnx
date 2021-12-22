@@ -3,15 +3,15 @@
         <file>pics/checkpoint-vpn.png</file>
         <file>pics/key.svg</file>
         <file>pics/key_grey.svg</file>
-        <file>icons/qsnx/scalable/actions/application-exit.svg</file>
-        <file>icons/qsnx/scalable/actions/edit-entry.svg</file>
-        <file>icons/qsnx/scalable/actions/entry-delete.svg</file>
-        <file>icons/qsnx/scalable/actions/entry-new.svg</file>
-        <file>icons/qsnx/scalable/actions/help-about.svg</file>
-        <file>icons/qsnx/scalable/actions/network-connect.svg</file>
-        <file>icons/qsnx/scalable/actions/network-disconnect.svg</file>
-        <file>icons/qsnx/scalable/actions/network-vpn.svg</file>
-        <file>icons/qsnx/scalable/actions/window.svg</file>
-        <file>icons/qsnx/index.theme</file>
+        <file>pics/application-exit.svg</file>
+        <file>pics/edit-entry.svg</file>
+        <file>pics/entry-delete.svg</file>
+        <file>pics/entry-new.svg</file>
+        <file>pics/help-about.svg</file>
+        <file>pics/network-connect.svg</file>
+        <file>pics/network-disconnect.svg</file>
+        <file>pics/network-vpn.svg</file>
+        <file>pics/window.svg</file>
+        <file>pics/configure.svg</file>
     </qresource>
 </RCC>

@@ -22,11 +22,11 @@ SNXSystemTrayIcon::SNXSystemTrayIcon() : QSystemTrayIcon(QCoreApplication::insta
     m_state = Disconnected;
     menu = new QMenu();
     connect_menu = NULL;
-    show_action = menu->addAction(QIcon::fromTheme("window"),tr("Show window"));
-    disconnect_action = menu->addAction(QIcon::fromTheme("network-disconnect"),tr("Disconnect"));
+    show_action = menu->addAction(QIcon(QIcon::fromTheme("window").pixmap(128)),tr("Show window"));
+    disconnect_action = menu->addAction(QIcon(QIcon::fromTheme("network-disconnect").pixmap(128)),tr("Disconnect"));
     recreate_connect_menu();
-    about_action = menu->addAction(QIcon::fromTheme("help-about"),tr("About..."));
-    exit_action = menu->addAction(QIcon::fromTheme("application-exit"),tr("Exit"));
+    about_action = menu->addAction(QIcon(QIcon::fromTheme("help-about").pixmap(128)),tr("About..."));
+    exit_action = menu->addAction(QIcon(QIcon::fromTheme("application-exit").pixmap(128)),tr("Exit"));
     setContextMenu(menu);
     setIcon(QIcon(QIcon("://pics/key_grey.svg").pixmap(128)));
     setToolTip("QSNX Client : "+tr("disconnected"));
@@ -92,7 +92,7 @@ void SNXSystemTrayIcon::recreate_connect_menu() {
     connect_menu = new QMenu();
     connect_menu->setTitle(tr("Connect to"));
     for (const QString & profile: Profile::profileNames()) {
-        connect_menu->addAction(QIcon::fromTheme("network-vpn"),profile);
+        connect_menu->addAction(QIcon(QIcon::fromTheme("network-vpn").pixmap(128)),profile);
     }
     QObject::connect(connect_menu,&QMenu::triggered,this,[=](QAction * action) {
         connect(action->text());
@@ -202,7 +202,7 @@ void QSNXWindow::on_profilesButton_clicked() {
 void QSNXWindow::fill_profiles() {
     ui->profileCombo->clear();
     for (const QString & profile: Profile::profileNames()) {
-        ui->profileCombo->addItem(QIcon::fromTheme("network-vpn"),profile);
+        ui->profileCombo->addItem(QIcon(QIcon::fromTheme("network-vpn").pixmap(128)),profile);
     }
     QString name = Profile::defaultName();
     if (!name.isEmpty()) ui->profileCombo->setCurrentText(name);
@@ -213,27 +213,27 @@ void QSNXWindow::fill_profiles() {
 void QSNXWindow::connected() {
     ui->connectButton->setEnabled(ui->profileCombo->count() > 0);
     ui->connectButton->setText(tr("Disconnect"));
-    ui->connectButton->setIcon(QIcon::fromTheme("network-disconnect"));
+    ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-disconnect").pixmap(128)));
     ui->profilesButton->setEnabled(false);
 }
 
 void QSNXWindow::disconnected() {
     ui->connectButton->setEnabled(ui->profileCombo->count() > 0);
     ui->connectButton->setText(tr("Connect"));
-    ui->connectButton->setIcon(QIcon::fromTheme("network-connect"));
+    ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-connect").pixmap(128)));
     ui->profilesButton->setEnabled(true);
 }
 
 void QSNXWindow::connecting() {
     ui->connectButton->setEnabled(false);
     ui->connectButton->setText(tr("Connect"));
-    ui->connectButton->setIcon(QIcon::fromTheme("network-connect"));
+    ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-connect").pixmap(128)));
     ui->profilesButton->setEnabled(false);
 }
 
 void QSNXWindow::disconnecting() {
     ui->connectButton->setEnabled(false);
     ui->connectButton->setText(tr("Disconnect"));
-    ui->connectButton->setIcon(QIcon::fromTheme("network-disconnect"));
+    ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-disconnect").pixmap(128)));
     ui->profilesButton->setEnabled(false);
 }
