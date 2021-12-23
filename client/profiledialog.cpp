@@ -213,6 +213,11 @@ void Profile::setUsingUserPassword(bool flag) {
 ProfileDialog::ProfileDialog(QWidget *parent) : QDialog(parent), ui(new Ui::ProfileDialog) {
     ui->setupUi(this);
 
+    setWindowIcon(QIcon(QIcon::fromTheme("configure").pixmap(128)));
+    ui->newProfileButton->setIcon(QIcon(QIcon::fromTheme("entry-new").pixmap(128)));
+    ui->editProfileNameButton->setIcon(QIcon(QIcon::fromTheme("edit-entry").pixmap(128)));
+    ui->deleteProfileButton->setIcon(QIcon(QIcon::fromTheme("entry-delete").pixmap(128)));
+
     QAbstractItemModel * old_model = ui->profileList->model();
     ui->profileList->setModel(new QStandardItemModel());
     if (old_model != NULL) delete old_model;

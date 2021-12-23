@@ -165,6 +165,10 @@ void QSNXWindow::showTray() {
 
 QSNXWindow::QSNXWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::QSNXWindow) {
     ui->setupUi(this);
+
+    ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-connect").pixmap(128)));
+    ui->profilesButton->setIcon(QIcon(QIcon::fromTheme("configure").pixmap(128)));
+    ui->aboutButton->setIcon(QIcon(QIcon::fromTheme("help-about").pixmap(128)));
     setAttribute(Qt::WA_DeleteOnClose,true);
     new WindowCenterer(this);
     QCoreApplication::instance()->installEventFilter(this);

@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("qsnx_client");
 
     SingleApplication app(argc, argv,false,SingleApplication::System);
-    qDebug() << QIcon::themeName();
     QIcon::setThemeName(QIcon::themeName());
     QIcon::setFallbackSearchPaths(QIcon::fallbackSearchPaths() << "://pics");
 

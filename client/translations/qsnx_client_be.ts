@@ -64,7 +64,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../profiledialog.cpp" line="+313"/>
+        <location filename="../profiledialog.cpp" line="+318"/>
         <source>New connection</source>
         <translation type="unfinished">Новае злучэнне</translation>
     </message>
@@ -93,7 +93,7 @@
     </message>
     <message>
         <location/>
-        <location filename="../qsnxwindow.cpp" line="+222"/>
+        <location filename="../qsnxwindow.cpp" line="+226"/>
         <location line="+7"/>
         <source>Connect</source>
         <translation type="unfinished">Злучыцца</translation>
@@ -128,7 +128,7 @@
 <context>
     <name>SNXSystemTrayIcon</name>
     <message>
-        <location filename="../qsnxwindow.cpp" line="-211"/>
+        <location filename="../qsnxwindow.cpp" line="-215"/>
         <source>Show window</source>
         <translation type="unfinished">Паказаць акно</translation>
     </message>
