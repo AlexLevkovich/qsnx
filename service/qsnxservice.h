@@ -22,9 +22,12 @@ public:
     void terminate();
     bool isRunning() const;
     bool isConnected() const;
+    QString dnsSuffix() const;
+    QStringList dnsIPs() const;
     qint64 processId() const;
     QString connnectedInfo() const;
     static qint64 processId(const QString & path);
+    static qint64 startDetached(const QString & pgm,const QStringList & args);
 
 signals:
     void passwordRequested();
@@ -36,6 +39,7 @@ private slots:
     void forked();
 
 private:
+    ~SNXProcess();
     void init();
     bool check_parameters();
     void analyze_line(const QByteArray & line);
@@ -47,6 +51,8 @@ private:
     QString m_username;
     QString m_certificate;
     QString m_connected_info;
+    QStringList dns_ips;
+    QString dns_suffix;
     QString m_error;
     bool m_first_time;
     bool m_is_connected;

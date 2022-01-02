@@ -35,6 +35,8 @@ SNXProcess::SNXProcess(const QString &url,const QString &username,const QString 
     m_username = username;
 }
 
+SNXProcess::~SNXProcess() {}
+
 QString SNXProcess::errorString() const {
     return m_error.isEmpty()?m_process.errorString():m_error;
 }
@@ -61,7 +63,7 @@ void SNXProcess::init() {
     connect(&m_process,&QProcess::errorOccurred,(QSNXService *)parent(),[=]{ emit ((QSNXService *)parent())->error(m_process.errorString()); });
     connect(&m_process,&QProcess::readyRead,this,[=]() { while (m_process.canReadLine()) analyze_line(m_process.readLine()); });
     connect(&m_process,&QProcess::errorOccurred,this,[=](){ emit errorOccurred(m_process.errorString()); });
-    connect(this,&SNXProcess::disconnected,this,[=](){ m_is_connected = false; m_connected_info.clear(); deleteLater(); });
+    connect(this,&SNXProcess::disconnected,this,[=](){ m_is_connected = false; dns_ips.clear(); dns_suffix.clear(); m_connected_info.clear(); deleteLater(); });
     connect(this,&SNXProcess::connected,this,[=](){ m_is_connected = true; m_connected_info.clear(); });
 }
 
@@ -135,7 +137,11 @@ bool SNXProcess::check_parameters() {
 }
 
 bool SNXProcess::startDetached() {
-    if (m_process.state() == QProcess::NotRunning) return m_process.startDetached();
+    if (m_process.state() == QProcess::NotRunning) {
+        bool ret = m_process.startDetached();
+        if (ret) deleteLater();
+        return ret;
+    }
     return false;
 }
 
@@ -192,8 +198,29 @@ void SNXProcess::analyze_line(const QByteArray & array) {
         else sendPassword(m_password);
     }
     else if (line == QLatin1String("SNX - connected.")) emit connected();
-    else m_connected_info += line + QLatin1Char('\n');
+    else {
+        if (m_is_connected && (line.startsWith("DNS Server") || line.startsWith("Secondary DNS Server")) && line.contains(':')) dns_ips.append(line.split(':').at(1).trimmed());
+        if (m_is_connected && line.startsWith("DNS Suffix") && line.contains(':')) dns_suffix = line.split(':').at(1).trimmed();
+        m_connected_info += line + QLatin1Char('\n');
+    }
     m_first_time = false;
+}
+
+QString SNXProcess::dnsSuffix() const {
+    return dns_suffix;
+}
+
+QStringList SNXProcess::dnsIPs() const {
+    return dns_ips;
+}
+
+qint64 SNXProcess::startDetached(const QString & pgm,const QStringList & args) {
+    QProcess proc;
+    proc.setProgram(pgm);
+    proc.setArguments(args);
+    qint64 pid;
+    if (!proc.startDetached(&pid)) return 0;
+    return pid;
 }
 
 QSNXService::QSNXService(QObject *parent) : QObject(parent) {
@@ -233,8 +260,25 @@ void QSNXService::start_process(SNXProcess * process) {
     m_process = process;
     QObject::connect(m_process,&SNXProcess::passwordRequested,this,&QSNXService::passwordRequested);
     QObject::connect(m_process,&SNXProcess::connected,this,&QSNXService::connected);
+    QObject::connect(m_process,&SNXProcess::connected,this,[=]() {
+        if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVE).exists()) return;
+        qDebug() << "using systemd_resolved for dns...";
+        QStringList args;
+        args << "--interface" << "tunsnx";
+        for (QString & ip: m_process->dnsIPs()) {
+            args << "--set-dns" << ip;
+        }
+        args << "--set-domain" << m_process->dnsSuffix();
+        SNXProcess::startDetached(SYSTEMD_RESOLVE,args);
+    });
     QObject::connect(m_process,&SNXProcess::disconnected,this,&QSNXService::disconnected);
-    QObject::connect(m_process,&SNXProcess::disconnected,this,[=]() { qDebug() << "disconnected"; m_process = NULL; });
+    QObject::connect(m_process,&SNXProcess::disconnected,this,[=]() {
+        qDebug() << "disconnected";
+        m_process = NULL;
+        if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVE).exists()) return;
+        qDebug() << "removing tunsnx's parameters from systemd_resolved...";
+        SNXProcess::startDetached(SYSTEMD_RESOLVE,QStringList() << "--interface" << "tunsnx" << "--revert");
+    });
     QObject::connect(m_process,&SNXProcess::errorOccurred,this,&QSNXService::error);
     m_process->start();
 }

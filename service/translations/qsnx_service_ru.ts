@@ -4,12 +4,12 @@
 <context>
     <name>SNXProcess</name>
     <message>
-        <location filename="../qsnxservice.cpp" line="+130"/>
+        <location filename="../qsnxservice.cpp" line="+132"/>
         <source>Username and certificate file path cannot be both empty!</source>
         <translation type="unfinished">Имя пользователя и путь к файлу сертификата не могут быть одновременно пустыми!</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+24"/>
         <source>Cannot start the second process!</source>
         <translation type="unfinished">Не удается запустить второй процесс!</translation>
     </message>
@@ -17,7 +17,7 @@
 <context>
     <name>QSNXService</name>
     <message>
-        <location line="+79"/>
+        <location line="+100"/>
         <source> is already running. Stop or kill it first.</source>
         <translation type="unfinished"> уже работает. Сначала остановите или убейте его.</translation>
     </message>
