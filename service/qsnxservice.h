@@ -22,7 +22,7 @@ public:
     void terminate();
     bool isRunning() const;
     bool isConnected() const;
-    QString dnsSuffix() const;
+    QStringList dnsSuffixes() const;
     QStringList dnsIPs() const;
     qint64 processId() const;
     QString connnectedInfo() const;
@@ -32,11 +32,12 @@ public:
 signals:
     void passwordRequested();
     void connected();
+    void forked();
     void disconnected();
     void errorOccurred(const QString & error);
 
 private slots:
-    void forked();
+    void snx_forked();
 
 private:
     ~SNXProcess();
@@ -52,7 +53,7 @@ private:
     QString m_certificate;
     QString m_connected_info;
     QStringList dns_ips;
-    QString dns_suffix;
+    QStringList dns_suffixes;
     QString m_error;
     bool m_first_time;
     bool m_is_connected;

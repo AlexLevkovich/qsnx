@@ -39,12 +39,12 @@ isEmpty(TMP_DIR) {
 DEFINES += TMP_DIR=\\\"$$TMP_DIR\\\"
 
 isEmpty(SYSTEMD_RESOLVED) {
-    SYSTEMD_RESOLVED = $$INSTALL_PREFIX/bin/systemd_resolved
+    SYSTEMD_RESOLVED = $$INSTALL_PREFIX/lib/systemd/systemd-resolved
 }
 DEFINES += SYSTEMD_RESOLVED=\\\"$$SYSTEMD_RESOLVED\\\"
 
 isEmpty(SYSTEMD_RESOLVE) {
-    SYSTEMD_RESOLVE = $$INSTALL_PREFIX/bin/systemd_resolve
+    SYSTEMD_RESOLVE = $$INSTALL_PREFIX/bin/systemd-resolve
 }
 DEFINES += SYSTEMD_RESOLVE=\\\"$$SYSTEMD_RESOLVE\\\"
 

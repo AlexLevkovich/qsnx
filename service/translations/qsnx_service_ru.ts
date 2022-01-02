@@ -4,7 +4,12 @@
 <context>
     <name>SNXProcess</name>
     <message>
-        <location filename="../qsnxservice.cpp" line="+132"/>
+        <location filename="../qsnxservice.cpp" line="+73"/>
+        <source>SNX process exited on its own will</source>
+        <translation type="unfinished">Процесс snx упал по собственному желанию</translation>
+    </message>
+    <message>
+        <location line="+62"/>
         <source>Username and certificate file path cannot be both empty!</source>
         <translation type="unfinished">Имя пользователя и путь к файлу сертификата не могут быть одновременно пустыми!</translation>
     </message>
@@ -17,7 +22,7 @@
 <context>
     <name>QSNXService</name>
     <message>
-        <location line="+100"/>
+        <location line="+106"/>
         <source> is already running. Stop or kill it first.</source>
         <translation type="unfinished"> уже работает. Сначала остановите или убейте его.</translation>
     </message>

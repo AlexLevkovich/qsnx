@@ -57,23 +57,26 @@ void SNXProcess::init() {
         if (!m_is_connected) emit disconnected();
         else {
             QThread::sleep(1);
-            QMetaObject::invokeMethod(this,"forked",Qt::QueuedConnection);
+            QMetaObject::invokeMethod(this,"snx_forked",Qt::QueuedConnection);
         }
     });
     connect(&m_process,&QProcess::errorOccurred,(QSNXService *)parent(),[=]{ emit ((QSNXService *)parent())->error(m_process.errorString()); });
     connect(&m_process,&QProcess::readyRead,this,[=]() { while (m_process.canReadLine()) analyze_line(m_process.readLine()); });
     connect(&m_process,&QProcess::errorOccurred,this,[=](){ emit errorOccurred(m_process.errorString()); });
-    connect(this,&SNXProcess::disconnected,this,[=](){ m_is_connected = false; dns_ips.clear(); dns_suffix.clear(); m_connected_info.clear(); deleteLater(); });
+    connect(this,&SNXProcess::disconnected,this,[=](){ m_is_connected = false; dns_ips.clear(); dns_suffixes.clear(); m_connected_info.clear(); deleteLater(); });
     connect(this,&SNXProcess::connected,this,[=](){ m_is_connected = true; m_connected_info.clear(); });
 }
 
-void SNXProcess::forked() {
+void SNXProcess::snx_forked() {
     qint64 pid;
     if ((pid = processId()) <= 0) {
+        m_error = tr("SNX process exited on its own will");
+        emit errorOccurred(m_error);
         emit disconnected();
         return;
     }
 
+    emit forked();
     QTimer * timer = new QTimer(this);
     timer->setInterval(2000);
     timer->setProperty("filename",QDir::separator()+QLatin1String("proc")+QDir::separator()+QString("%1").arg(pid));
@@ -200,14 +203,20 @@ void SNXProcess::analyze_line(const QByteArray & array) {
     else if (line == QLatin1String("SNX - connected.")) emit connected();
     else {
         if (m_is_connected && (line.startsWith("DNS Server") || line.startsWith("Secondary DNS Server")) && line.contains(':')) dns_ips.append(line.split(':').at(1).trimmed());
-        if (m_is_connected && line.startsWith("DNS Suffix") && line.contains(':')) dns_suffix = line.split(':').at(1).trimmed();
+        if (m_is_connected && line.startsWith("DNS Suffix") && line.contains(':')) {
+            dns_suffixes.clear();
+            QString dns_suffix = line.split(':').at(1).trimmed();
+            for (QString & suffix: line.split(':').at(1).trimmed().split(';',Qt::SkipEmptyParts)) {
+                dns_suffixes.append(suffix.trimmed());
+            }
+        }
         m_connected_info += line + QLatin1Char('\n');
     }
     m_first_time = false;
 }
 
-QString SNXProcess::dnsSuffix() const {
-    return dns_suffix;
+QStringList SNXProcess::dnsSuffixes() const {
+    return dns_suffixes;
 }
 
 QStringList SNXProcess::dnsIPs() const {
@@ -260,7 +269,8 @@ void QSNXService::start_process(SNXProcess * process) {
     m_process = process;
     QObject::connect(m_process,&SNXProcess::passwordRequested,this,&QSNXService::passwordRequested);
     QObject::connect(m_process,&SNXProcess::connected,this,&QSNXService::connected);
-    QObject::connect(m_process,&SNXProcess::connected,this,[=]() {
+    QObject::connect(m_process,&SNXProcess::forked,this,[=]() {
+        qDebug() << SYSTEMD_RESOLVED << SNXProcess::processId(SYSTEMD_RESOLVED);
         if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVE).exists()) return;
         qDebug() << "using systemd_resolved for dns...";
         QStringList args;
@@ -268,16 +278,16 @@ void QSNXService::start_process(SNXProcess * process) {
         for (QString & ip: m_process->dnsIPs()) {
             args << "--set-dns" << ip;
         }
-        args << "--set-domain" << m_process->dnsSuffix();
+        for (QString & suffix: m_process->dnsSuffixes()) {
+            args << "--set-domain" << suffix;
+        }
+        qDebug() << SYSTEMD_RESOLVE << args;
         SNXProcess::startDetached(SYSTEMD_RESOLVE,args);
     });
     QObject::connect(m_process,&SNXProcess::disconnected,this,&QSNXService::disconnected);
     QObject::connect(m_process,&SNXProcess::disconnected,this,[=]() {
         qDebug() << "disconnected";
         m_process = NULL;
-        if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVE).exists()) return;
-        qDebug() << "removing tunsnx's parameters from systemd_resolved...";
-        SNXProcess::startDetached(SYSTEMD_RESOLVE,QStringList() << "--interface" << "tunsnx" << "--revert");
     });
     QObject::connect(m_process,&SNXProcess::errorOccurred,this,&QSNXService::error);
     m_process->start();
