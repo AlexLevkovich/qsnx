@@ -9,7 +9,7 @@
         <translation type="unfinished">Працэс snx зваліўся па ўласным жаданні</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+66"/>
         <source>Username and certificate file path cannot be both empty!</source>
         <translation type="unfinished">Імя карыстальніка і шлях да файла сертыфіката не могуць быць адначасова пустымі!</translation>
     </message>

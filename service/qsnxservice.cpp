@@ -81,7 +81,11 @@ void SNXProcess::snx_forked() {
     timer->setInterval(2000);
     timer->setProperty("filename",QDir::separator()+QLatin1String("proc")+QDir::separator()+QString("%1").arg(pid));
     connect(timer,&QTimer::timeout,this,[=]() {
-        if (!QFileInfo::exists(timer->property("filename").toString())) emit disconnected();
+        if (!QFileInfo::exists(timer->property("filename").toString())) {
+            timer->stop();
+            emit disconnected();
+            timer->deleteLater();
+        }
     });
     timer->start();
 }
@@ -270,7 +274,6 @@ void QSNXService::start_process(SNXProcess * process) {
     QObject::connect(m_process,&SNXProcess::passwordRequested,this,&QSNXService::passwordRequested);
     QObject::connect(m_process,&SNXProcess::connected,this,&QSNXService::connected);
     QObject::connect(m_process,&SNXProcess::forked,this,[=]() {
-        qDebug() << SYSTEMD_RESOLVED << SNXProcess::processId(SYSTEMD_RESOLVED);
         if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVE).exists()) return;
         qDebug() << "using systemd_resolved for dns...";
         QStringList args;
@@ -294,6 +297,7 @@ void QSNXService::start_process(SNXProcess * process) {
 }
 
 void QSNXService::disconnect() {
+    qDebug() << "disconnecting by client...";
     (new SNXProcess(this))->startDetached();
 }
 
@@ -312,6 +316,7 @@ void QSNXService::sendPassword(const QString & password) {
 }
 
 void QSNXService::terminate() {
+    qDebug() << "terminating by client...";
     if (m_process == NULL) return;
     m_process->terminate();
 }
