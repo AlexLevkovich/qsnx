@@ -209,8 +209,13 @@ void SNXProcess::analyze_line(const QByteArray & array) {
         if (m_is_connected && (line.startsWith("DNS Server") || line.startsWith("Secondary DNS Server")) && line.contains(':')) dns_ips.append(line.split(':').at(1).trimmed());
         if (m_is_connected && line.startsWith("DNS Suffix") && line.contains(':')) {
             dns_suffixes.clear();
-            QString dns_suffix = line.split(':').at(1).trimmed();
-            for (QString & suffix: line.split(':').at(1).trimmed().split(';',Qt::SkipEmptyParts)) {
+            for (QString & suffix: line.split(':').at(1).trimmed().split(';',
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+                                                                         Qt::SkipEmptyParts
+#else
+                                                                         QString::SkipEmptyParts
+#endif
+                                                                         )) {
                 dns_suffixes.append(suffix.trimmed());
             }
         }
