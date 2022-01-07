@@ -1,0 +1,7 @@
+Package: qsnx
+Architecture: amd64
+Maintainer: Alex Levkovich
+Priority: optional
+Version: 1.0
+Description: GUI for snx
+Depends: snx, libqt5core5a, libqt5network5, libqt5gui5, libqt5dbus5, libqt5widgets5, libqt5svg5
