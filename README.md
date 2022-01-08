@@ -1,4 +1,4 @@
-# QSNX v1.0
+# QSNX v1.1
 **snx** is GUI to proprietary Check Point's SNX VPN client.  
 
 It contains four subprojects:  
