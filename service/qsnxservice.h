@@ -16,8 +16,8 @@ public:
     SNXProcess(const QString &url,const QString &username,const QString &password,int port = 443,QObject *parent = nullptr);
     SNXProcess(QObject *parent = nullptr);
     QString errorString() const;
-    void start();
     void sendPassword(const QString & password);
+    void start();
     bool startDetached();
     void terminate();
     bool isRunning() const;
@@ -26,21 +26,28 @@ public:
     QStringList dnsIPs() const;
     qint64 processId() const;
     QString connnectedInfo() const;
+    int maxConnectCount() const;
+    void setMaxConnectCount(int count);
     static qint64 processId(const QString & path);
     static qint64 startDetached(const QString & pgm,const QStringList & args);
 
 signals:
     void passwordRequested();
+    void connecting();
     void connected();
-    void forked();
     void disconnected();
     void errorOccurred(const QString & error);
 
-private slots:
-    void snx_forked();
-
 private:
+    enum State {
+        Starting,
+        SortOfStarted,
+        Started,
+        Stopped
+    };
+
     ~SNXProcess();
+    void snx_forked();
     void init();
     bool check_parameters();
     void analyze_line(const QByteArray & line);
@@ -56,7 +63,10 @@ private:
     QStringList dns_suffixes;
     QString m_error;
     bool m_first_time;
-    bool m_is_connected;
+    State m_state;
+    int m_connect_counter;
+    int m_max_connect_count;
+    static const int MAX_CONNECT_COUNT;
 };
 
 class QSNXService : public QObject, QDBusContext {
@@ -76,6 +86,7 @@ public slots:
     void terminate();
 signals:
     void passwordRequested();
+    void connecting();
     void connected();
     void disconnected();
     void error(const QString &str);

@@ -4,12 +4,12 @@
 <context>
     <name>SNXProcess</name>
     <message>
-        <location filename="../qsnxservice.cpp" line="+73"/>
+        <location filename="../qsnxservice.cpp" line="+93"/>
         <source>SNX process exited on its own will</source>
         <translation type="unfinished">Процесс snx упал по собственному желанию</translation>
     </message>
     <message>
-        <location line="+66"/>
+        <location line="+68"/>
         <source>Username and certificate file path cannot be both empty!</source>
         <translation type="unfinished">Имя пользователя и путь к файлу сертификата не могут быть одновременно пустыми!</translation>
     </message>

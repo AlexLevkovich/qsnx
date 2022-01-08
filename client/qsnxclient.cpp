@@ -11,6 +11,7 @@ QSNXClient::QSNXClient(QObject *parent) : QObject(parent) {
     if (QFileInfo((INSTALL_PREFIX"/bin/"+QFileInfo(QCoreApplication::applicationFilePath()).fileName())).canonicalFilePath() == QFileInfo(QCoreApplication::applicationFilePath()).canonicalFilePath()) m_interface->connection().interface()->startService(ComAlexlQtQSNXInterface::staticInterfaceName());
 
     QObject::connect(m_interface,&ComAlexlQtQSNXInterface::passwordRequested,this,&QSNXClient::passwordRequested);
+    QObject::connect(m_interface,&ComAlexlQtQSNXInterface::connecting,this,&QSNXClient::connecting);
     QObject::connect(m_interface,&ComAlexlQtQSNXInterface::connected,this,&QSNXClient::connected);
     QObject::connect(m_interface,&ComAlexlQtQSNXInterface::disconnected,this,&QSNXClient::disconnected);
     QObject::connect(m_interface,&ComAlexlQtQSNXInterface::error,this,&QSNXClient::error);

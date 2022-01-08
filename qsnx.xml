@@ -3,6 +3,8 @@
   <interface name="com.alexl.qt.QSNX">
     <signal name="passwordRequested">
     </signal>
+    <signal name="connecting">
+    </signal>
     <signal name="connected">
     </signal>
     <signal name="error">

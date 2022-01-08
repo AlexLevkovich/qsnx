@@ -24,6 +24,7 @@ public:
 
 signals:
     void passwordRequested();
+    void connecting();
     void connected();
     void disconnected();
     void error(const QString &str);
