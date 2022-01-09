@@ -33,6 +33,26 @@ isEmpty(USER_SWITCH) {
 }
 DEFINES += USER_SWITCH=\\\"$$USER_SWITCH\\\"
 
+isEmpty(RESOLVE_IF_SWITCH) {
+    RESOLVE_IF_SWITCH = --interface
+}
+DEFINES += RESOLVE_IF_SWITCH=\\\"$$RESOLVE_IF_SWITCH\\\"
+
+isEmpty(RESOLVE_DNS_SWITCH) {
+    RESOLVE_DNS_SWITCH = --set-dns
+}
+DEFINES += RESOLVE_DNS_SWITCH=\\\"$$RESOLVE_DNS_SWITCH\\\"
+
+isEmpty(RESOLVE_DOMAIN_SWITCH) {
+    RESOLVE_DOMAIN_SWITCH = --set-domain
+}
+DEFINES += RESOLVE_DOMAIN_SWITCH=\\\"$$RESOLVE_DOMAIN_SWITCH\\\"
+
+isEmpty(TUNIF) {
+    TUNIF = tunsnx
+}
+DEFINES += TUNIF=\\\"$$TUNIF\\\"
+
 isEmpty(TMP_DIR) {
     TMP_DIR = /tmp
 }

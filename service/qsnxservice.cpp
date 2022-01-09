@@ -305,12 +305,12 @@ void QSNXService::start_process(SNXProcess * process) {
         if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVE).exists()) return;
         qDebug() << "using systemd_resolved for dns...";
         QStringList args;
-        args << "--interface" << "tunsnx";
+        args << RESOLVE_IF_SWITCH << TUNIF;
         for (QString & ip: m_process->dnsIPs()) {
-            args << "--set-dns" << ip;
+            args << RESOLVE_DNS_SWITCH << ip;
         }
         for (QString & suffix: m_process->dnsSuffixes()) {
-            args << "--set-domain" << suffix;
+            args << RESOLVE_DOMAIN_SWITCH << suffix;
         }
         qDebug() << SYSTEMD_RESOLVE << args;
         SNXProcess::startDetached(SYSTEMD_RESOLVE,args);
