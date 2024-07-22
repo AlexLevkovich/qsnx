@@ -12,8 +12,8 @@
 class SNXProcess: public QObject {
     Q_OBJECT
 public:
-    SNXProcess(const QString &url,const QString &certificate,int port,QObject *parent = nullptr);
-    SNXProcess(const QString &url,const QString &username,const QString &password,int port = 443,QObject *parent = nullptr);
+    SNXProcess(const QString &url,const QString &certificate,int port,bool backward,QObject *parent = nullptr);
+    SNXProcess(const QString &url,const QString &username,const QString &password,int port,bool backward,QObject *parent = nullptr);
     SNXProcess(QObject *parent = nullptr);
     QString errorString() const;
     void sendPassword(const QString & password);
@@ -77,8 +77,8 @@ public:
     ~QSNXService();
 
 public slots:
-    void connect(const QString &url,const QString &certificate,int port);
-    void connect(const QString &url,const QString &username,const QString &password,int port);
+    void connect(const QString &url,const QString &certificate,int port,bool backward);
+    void connect(const QString &url,const QString &username,const QString &password,int port,bool backward);
     void disconnect();
     bool isConnected();
     QString sessionInfo();

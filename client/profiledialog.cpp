@@ -33,28 +33,31 @@ Profile::Profile(const QString & name) : m_crypto(crypto_key) {
     init(&reader,name);
 }
 
-Profile::Profile(const QString & site,int port,const QString & certificate) : m_crypto(crypto_key) {
+Profile::Profile(const QString & site,int port,const QString & certificate,bool backward) : m_crypto(crypto_key) {
     m_site = site;
     m_port = (port <= 1)?443:port;
     m_certificate = certificate;
     m_use_userpw = false;
+    m_backward = backward;
 }
 
-Profile::Profile(const QString & site,int port,const QString & username,const QString & password) : m_crypto(crypto_key) {
+Profile::Profile(const QString & site,int port,const QString & username,const QString & password,bool backward) : m_crypto(crypto_key) {
     m_site = site;
     m_port = (port <= 1)?443:port;
     m_username = username;
     m_password = password;
     m_use_userpw = true;
+    m_backward = backward;
 }
 
-Profile::Profile(const QString & site,int port,const QString & username,const QString & password,const QString & certificate,bool use_userpw) : m_crypto(crypto_key) {
+Profile::Profile(const QString & site,int port,const QString & username,const QString & password,const QString & certificate,bool use_userpw,bool backward) : m_crypto(crypto_key) {
     m_site = site;
     m_port = (port <= 1)?443:port;
     m_username = username;
     m_password = password;
     m_certificate = certificate;
     m_use_userpw = use_userpw;
+    m_backward = backward;
 }
 
 Profile & Profile::init(ConfReader * reader,const QString & name) {
@@ -64,6 +67,7 @@ Profile & Profile::init(ConfReader * reader,const QString & name) {
     m_certificate = reader->value<QString>(name+"/certificate","");
     m_port = reader->value<int>(name+"/port",443);
     m_use_userpw = reader->value<bool>(name+"/use_userpw",true);
+    m_backward = reader->value<bool>(name+"/backward",false);
     return *this;
 }
 
@@ -97,6 +101,10 @@ bool Profile::isCertificateValid() const {
 
 bool Profile::isUserPasswordValid() const {
     return (!m_username.isEmpty() && m_use_userpw);
+}
+
+bool Profile::isBackwardCompatabilityEnabled() {
+    return m_backward;
 }
 
 const QString Profile::user_dir() {
@@ -138,7 +146,8 @@ bool Profile::save(const QString & name) {
         !reader.setValues<QString>(name+"/password",QStringList() << m_crypto.encryptToString(m_password)) ||
         !reader.setValues<QString>(name+"/certificate",QStringList() << m_certificate) ||
         !reader.setValues<int>(name+"/port",QList<int>() << m_port) ||
-        !reader.setValues<bool>(name+"/use_userpw",QList<bool>() << m_use_userpw)) return false;
+        !reader.setValues<bool>(name+"/use_userpw",QList<bool>() << m_use_userpw) ||
+        !reader.setValues<bool>(name+"/backward",QList<bool>() << m_backward)) return false;
     return true;
 }
 
@@ -159,6 +168,7 @@ Profile & Profile::operator=(const Profile &profile) {
     m_password = profile.m_password;
     m_certificate = profile.m_certificate;
     m_use_userpw = profile.m_use_userpw;
+    m_backward = profile.m_backward;
     return *this;
 }
 
@@ -210,6 +220,10 @@ void Profile::setUsingUserPassword(bool flag) {
     m_use_userpw = flag;
 }
 
+void Profile::setBackwardCompatabilityMode(bool flag) {
+    m_backward = flag;
+}
+
 ProfileDialog::ProfileDialog(QWidget *parent) : QDialog(parent), ui(new Ui::ProfileDialog) {
     ui->setupUi(this);
 
@@ -238,8 +252,8 @@ ProfileDialog::ProfileDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Prof
             QMetaObject::invokeMethod(ui->profileList,"edit",Qt::QueuedConnection,Q_ARG(QModelIndex,index));
             return;
         }
-        if (index.row() < m_profiles.count()) m_profiles[index.row()] = Profile(ui->siteEdit->text(),ui->portSpin->value(),ui->userEdit->text(),ui->passwordEdit->text(),ui->certEdit->text(),ui->userPwRadio->isChecked());
-        else m_profiles.append(Profile(ui->siteEdit->text(),ui->portSpin->value(),ui->userEdit->text(),ui->passwordEdit->text(),ui->certEdit->text(),ui->userPwRadio->isChecked()));
+        if (index.row() < m_profiles.count()) m_profiles[index.row()] = Profile(ui->siteEdit->text(),ui->portSpin->value(),ui->userEdit->text(),ui->passwordEdit->text(),ui->certEdit->text(),ui->userPwRadio->isChecked(),ui->backCheck->isChecked());
+        else m_profiles.append(Profile(ui->siteEdit->text(),ui->portSpin->value(),ui->userEdit->text(),ui->passwordEdit->text(),ui->certEdit->text(),ui->userPwRadio->isChecked(),ui->backCheck->isChecked()));
         on_list_selectionChanged();
         update_ok_state();
     });
@@ -266,6 +280,7 @@ void ProfileDialog::on_list_selectionChanged() {
         ui->certEdit->setText("");
         ui->editProfileNameButton->setEnabled(false);
         ui->deleteProfileButton->setEnabled(false);
+        ui->backCheck->setEnabled(false);
         return;
     }
     QModelIndex index = selection[0];
@@ -276,6 +291,7 @@ void ProfileDialog::on_list_selectionChanged() {
     ui->userEdit->setText(profile.userName());
     ui->passwordEdit->setText(profile.password());
     ui->certEdit->setText(profile.certificate());
+    ui->backCheck->setEnabled(true);
     ui->siteEdit->setEnabled(true);
     ui->portSpin->setEnabled(true);
     ui->userEdit->setEnabled(true);
@@ -293,6 +309,7 @@ void ProfileDialog::on_list_selectionChanged() {
         ui->userPwRadio->setChecked(true);
         on_userPwRadio_clicked(true);
     }
+    ui->backCheck->setChecked(profile.isBackwardCompatabilityEnabled());
 }
 
 bool ProfileDialog::contains_profile_name(const QString & name,int current_row) const {
@@ -401,3 +418,8 @@ void ProfileDialog::on_userPwRadio_clicked(bool checked) {
 void ProfileDialog::on_editProfileNameButton_clicked() {
     ui->profileList->edit(ui->profileList->selectionModel()->selectedIndexes()[0]);
 }
+
+void ProfileDialog::on_backCheck_clicked(bool checked) {
+    m_profiles[ui->profileList->selectionModel()->selectedIndexes()[0].row()].setBackwardCompatabilityMode(checked);
+}
+

@@ -17,17 +17,17 @@ QSNXClient::QSNXClient(QObject *parent) : QObject(parent) {
     QObject::connect(m_interface,&ComAlexlQtQSNXInterface::error,this,&QSNXClient::error);
 }
 
-bool QSNXClient::connect(const QString &url,const QString &certificate,int port) {
+bool QSNXClient::connect(const QString &url,const QString &certificate,bool backward,int port) {
     if (!m_interface->isValid()) return false;
 
-    replyToVoid(m_interface->connect(url,certificate,port));
+    replyToVoid(m_interface->connect(url,certificate,port,backward));
     return true;
 }
 
-bool QSNXClient::connect(const QString &url,const QString &username,const QString &password,int port) {
+bool QSNXClient::connect(const QString &url,const QString &username,const QString &password,bool backward,int port) {
     if (!m_interface->isValid()) return false;
 
-    replyToVoid(m_interface->connect(url,username,password,port));
+    replyToVoid(m_interface->connect(url,username,password,port,backward));
     return true;
 }
 

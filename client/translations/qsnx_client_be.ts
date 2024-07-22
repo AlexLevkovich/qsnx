@@ -64,7 +64,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../profiledialog.cpp" line="+318"/>
+        <location filename="../profiledialog.cpp" line="+335"/>
         <source>New connection</source>
         <translation type="unfinished">Новае злучэнне</translation>
     </message>
@@ -77,6 +77,11 @@
         <location line="+0"/>
         <source>All Files (*.*)</source>
         <translation type="unfinished">Усе файлы (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../profiledialog.ui"/>
+        <source>Backward compatability mode</source>
+        <translation type="unfinished">Рэжым зваротнай сумяшчальнасці</translation>
     </message>
 </context>
 <context>

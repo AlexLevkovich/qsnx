@@ -23,15 +23,21 @@ SNXProcess::SNXProcess(QObject *parent) : QObject(parent) {
     m_process.setArguments(QStringList() << DISCONNECT_SWITCH);
 }
 
-SNXProcess::SNXProcess(const QString &url,const QString &certificate,int port,QObject *parent) : QObject(parent) {
+SNXProcess::SNXProcess(const QString &url,const QString &certificate,int port,bool backward,QObject *parent) : QObject(parent) {
     init();
-    m_process.setArguments(QStringList() << URL_SWITCH << url << CERTIFICATE_SWITCH << certificate << PORT_SWITCH << QString("%1").arg(port));
+    QStringList args;
+    args << URL_SWITCH << url << CERTIFICATE_SWITCH << certificate << PORT_SWITCH << QString("%1").arg(port);
+    if (backward) args << BACKWARD_SWITCH;
+    m_process.setArguments(args);
     m_certificate = certificate;
 }
 
-SNXProcess::SNXProcess(const QString &url,const QString &username,const QString &password,int port,QObject *parent) : QObject(parent) {
+SNXProcess::SNXProcess(const QString &url,const QString &username,const QString &password,int port,bool backward,QObject *parent) : QObject(parent) {
     init();
-    m_process.setArguments(QStringList() << URL_SWITCH << url << USER_SWITCH << username << PORT_SWITCH << QString("%1").arg(port));
+    QStringList args;
+    args << URL_SWITCH << url << USER_SWITCH << username << PORT_SWITCH << QString("%1").arg(port);
+    if (backward) args << BACKWARD_SWITCH;
+    m_process.setArguments(args);
     m_password = password;
     m_username = username;
 }
@@ -283,12 +289,12 @@ QSNXService::~QSNXService() {
     disconnect();
 }
 
-void QSNXService::connect(const QString &url,const QString &certificate,int port) {
-    start_process(new SNXProcess(url,certificate,port,this));
+void QSNXService::connect(const QString &url,const QString &certificate,int port,bool backward) {
+    start_process(new SNXProcess(url,certificate,port,backward,this));
 }
 
-void QSNXService::connect(const QString &url,const QString &username,const QString &password,int port) {
-    start_process(new SNXProcess(url,username,password,port,this));
+void QSNXService::connect(const QString &url,const QString &username,const QString &password,int port,bool backward) {
+    start_process(new SNXProcess(url,username,password,port,backward,this));
 }
 
 void QSNXService::start_process(SNXProcess * process) {

@@ -20,9 +20,9 @@ public:
     Profile();
     Profile(const Profile & profile);
     Profile(const QString & name);
-    Profile(const QString & site,int port,const QString & certificate);
-    Profile(const QString & site,int port,const QString & username,const QString & password);
-    Profile(const QString & site,int port,const QString & username,const QString & password,const QString & certificate,bool use_userpw);
+    Profile(const QString & site,int port,const QString & certificate,bool backward);
+    Profile(const QString & site,int port,const QString & username,const QString & password,bool backward);
+    Profile(const QString & site,int port,const QString & username,const QString & password,const QString & certificate,bool use_userpw,bool backward);
     static const QStringList profileNames();
     static const QMap<QString,Profile> profiles();
     static const Profile defaultInstance();
@@ -43,6 +43,7 @@ public:
     QString site() const;
     int port() const;
     bool isUserPassword() const;
+    bool isBackwardCompatabilityEnabled();
 
     void setUserName(const QString & username);
     void setPassword(const QString & password);
@@ -50,6 +51,7 @@ public:
     void setSite(const QString & site);
     void setPort(int port);
     void setUsingUserPassword(bool flag);
+    void setBackwardCompatabilityMode(bool flag);
 
 private:
     Profile & init(ConfReader * reader,const QString & name);
@@ -64,6 +66,7 @@ private:
     SimpleCrypt m_crypto;
     int m_port;
     bool m_use_userpw;
+    bool m_backward;
 };
 
 class ProfileDialog : public QDialog {
@@ -87,6 +90,8 @@ private slots:
     void on_editProfileNameButton_clicked();
     void on_portSpin_valueChanged(int arg1);
     void on_list_selectionChanged();
+
+    void on_backCheck_clicked(bool checked);
 
 private:
     void update_ok_state();

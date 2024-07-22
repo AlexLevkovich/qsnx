@@ -22,11 +22,13 @@
       <arg name="username" type="s" direction="in"/>
       <arg name="password" type="s" direction="in"/>
       <arg name="port" type="i" direction="in"/>
+      <arg name="backward" type="b" direction="in"/>
     </method>
     <method name="connect">
       <arg name="url" type="s" direction="in"/>
       <arg name="certificate" type="s" direction="in"/>
       <arg name="port" type="i" direction="in"/>
+      <arg name="backward" type="b" direction="in"/>
     </method>
     <method name="isConnected">
       <arg type="b" direction="out"/>

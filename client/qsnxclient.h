@@ -14,8 +14,8 @@ class QSNXClient : public QObject {
     Q_OBJECT
 public:
     explicit QSNXClient(QObject *parent = nullptr);
-    bool connect(const QString &url,const QString &certificate,int port = 443);
-    bool connect(const QString &url,const QString &username,const QString &password,int port = 443);
+    bool connect(const QString &url,const QString &certificate,bool backward,int port = 443);
+    bool connect(const QString &url,const QString &username,const QString &password,bool backward,int port = 443);
     bool disconnect();
     bool isConnected() const;
     QString sessionInfo() const;
