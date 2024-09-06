@@ -1,0 +1,7 @@
+Package: snx
+Priority: optional
+Maintainer: Alex Levkovich
+Architecture: amd64
+Version: 800010003
+Depends: libstdc++5:i386, libpam0g:i386, libx11-6:i386
+Description: Check Point SSL Network Extender (VPN Client)
