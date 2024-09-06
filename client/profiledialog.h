@@ -73,7 +73,7 @@ class ProfileDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit ProfileDialog(QWidget *parent = nullptr);
+    explicit ProfileDialog(bool has_backward_compability,QWidget *parent = nullptr);
     ~ProfileDialog();
 
 private slots:

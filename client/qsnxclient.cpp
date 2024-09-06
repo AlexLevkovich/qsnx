@@ -46,6 +46,14 @@ bool QSNXClient::isConnected() const {
     return ret;
 }
 
+bool QSNXClient::hasBackwardCompabilityOption() const {
+    if (!m_interface->isValid()) return false;
+
+    bool ret = false;
+    if (replyToValue<bool>(m_interface->hasBackwardCompabilityOption(),ret)) return ret;
+    return ret;
+}
+
 QString QSNXClient::sessionInfo() const {
     if (!m_interface->isValid()) return QString();
 

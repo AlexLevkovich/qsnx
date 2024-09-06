@@ -65,7 +65,7 @@ private:
 class QSNXWindow : public QMainWindow {
     Q_OBJECT
 public:
-    QSNXWindow(QWidget *parent = nullptr);
+    QSNXWindow(QSNXClient * client,QWidget *parent = nullptr);
     ~QSNXWindow();
     static void showTray();
 
@@ -90,5 +90,6 @@ private:
 
     Ui::QSNXWindow *ui;
     static SNXSystemTrayIcon * m_tray_icon;
+    QSNXClient * m_client;
 };
 #endif // QSNXWINDOW_H

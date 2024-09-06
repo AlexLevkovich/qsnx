@@ -17,6 +17,9 @@
     </method>
     <method name="terminate">
     </method>
+    <method name="hasBackwardCompabilityOption">
+      <arg type="b" direction="out"/>
+    </method>
     <method name="connect">
       <arg name="url" type="s" direction="in"/>
       <arg name="username" type="s" direction="in"/>

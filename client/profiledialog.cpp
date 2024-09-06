@@ -224,7 +224,7 @@ void Profile::setBackwardCompatabilityMode(bool flag) {
     m_backward = flag;
 }
 
-ProfileDialog::ProfileDialog(QWidget *parent) : QDialog(parent), ui(new Ui::ProfileDialog) {
+ProfileDialog::ProfileDialog(bool has_backward_compability,QWidget *parent) : QDialog(parent), ui(new Ui::ProfileDialog) {
     ui->setupUi(this);
 
     setWindowIcon(QIcon(QIcon::fromTheme("configure").pixmap(128)));
@@ -257,6 +257,7 @@ ProfileDialog::ProfileDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Prof
         on_list_selectionChanged();
         update_ok_state();
     });
+    ui->backCheck->setHidden(!has_backward_compability);
 }
 
 ProfileDialog::~ProfileDialog() {

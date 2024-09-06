@@ -21,6 +21,7 @@ public:
     QString sessionInfo() const;
     void sendPassword(const QString & password);
     void terminate();
+    bool hasBackwardCompabilityOption() const;
 
 signals:
     void passwordRequested();

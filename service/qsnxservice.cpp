@@ -8,6 +8,7 @@
 #include <QTemporaryFile>
 #include <QFile>
 #include <QDirIterator>
+#include <QTimer>
 #include <QFileInfo>
 #include <QDirIterator>
 #include <QDebug>
@@ -290,11 +291,33 @@ QSNXService::~QSNXService() {
 }
 
 void QSNXService::connect(const QString &url,const QString &certificate,int port,bool backward) {
-    start_process(new SNXProcess(url,certificate,port,backward,this));
+    start_process(new SNXProcess(url,certificate,port,hasBackwardCompabilityOption()?backward:false,this));
 }
 
 void QSNXService::connect(const QString &url,const QString &username,const QString &password,int port,bool backward) {
-    start_process(new SNXProcess(url,username,password,port,backward,this));
+    start_process(new SNXProcess(url,username,password,port,hasBackwardCompabilityOption()?backward:false,this));
+}
+
+bool QSNXService::hasBackwardCompabilityOption() {
+    return check_option("-b");
+}
+
+bool QSNXService::check_option(const QString & option) {
+    bool started = false;
+    bool finished = false;
+    QProcess snx;
+    QEventLoop loop;
+    QObject::connect(&snx,&QProcess::started,this,[&]() {
+        started = true;
+    });
+    QObject::connect(&snx,QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),this,[&](int, QProcess::ExitStatus exitStatus) {
+        if (started && exitStatus == QProcess::NormalExit) finished = true;
+        loop.quit();
+    });
+    QObject::connect(&snx,&QProcess::errorOccurred,&loop,&QEventLoop::quit);
+    snx.start(SNX_PATH, QStringList() << option);
+    loop.exec();
+    return (finished && !snx.readAllStandardError().startsWith("snx: invalid option "));
 }
 
 void QSNXService::start_process(SNXProcess * process) {
@@ -308,18 +331,20 @@ void QSNXService::start_process(SNXProcess * process) {
     QObject::connect(m_process,&SNXProcess::connecting,this,&QSNXService::connecting);
     QObject::connect(m_process,&SNXProcess::connected,this,&QSNXService::connected);
     QObject::connect(m_process,&SNXProcess::connected,this,[=]() {
-        if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVE).exists()) return;
+        if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVECTL).exists()) return;
         qDebug() << "using systemd_resolved for dns...";
         QStringList args;
-        args << RESOLVE_IF_SWITCH << TUNIF;
+        args << RESOLVE_DNS_SWITCH << TUNIF;
         for (QString & ip: m_process->dnsIPs()) {
-            args << RESOLVE_DNS_SWITCH << ip;
+            args << ip;
         }
+        SNXProcess::startDetached(SYSTEMD_RESOLVECTL,args);
+        args.clear();
+        args << RESOLVE_DOMAIN_SWITCH << TUNIF;
         for (QString & suffix: m_process->dnsSuffixes()) {
-            args << RESOLVE_DOMAIN_SWITCH << suffix;
+            args << suffix;
         }
-        qDebug() << SYSTEMD_RESOLVE << args;
-        SNXProcess::startDetached(SYSTEMD_RESOLVE,args);
+        SNXProcess::startDetached(SYSTEMD_RESOLVECTL,args);
     });
     QObject::connect(m_process,&SNXProcess::disconnected,this,&QSNXService::disconnected);
     QObject::connect(m_process,&SNXProcess::disconnected,this,[=]() {

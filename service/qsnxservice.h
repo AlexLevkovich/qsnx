@@ -84,6 +84,7 @@ public slots:
     QString sessionInfo();
     void sendPassword(const QString & password);
     void terminate();
+    bool hasBackwardCompabilityOption();
 signals:
     void passwordRequested();
     void connecting();
@@ -93,6 +94,7 @@ signals:
 
 private:
     void start_process(SNXProcess * process);
+    bool check_option(const QString & option);
 
     SNXProcess * m_process;
 };

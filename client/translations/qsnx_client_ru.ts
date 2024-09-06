@@ -64,7 +64,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../profiledialog.cpp" line="+335"/>
+        <location filename="../profiledialog.cpp" line="+336"/>
         <source>New connection</source>
         <translation type="unfinished">Новое соединение</translation>
     </message>
@@ -98,7 +98,7 @@
     </message>
     <message>
         <location/>
-        <location filename="../qsnxwindow.cpp" line="+226"/>
+        <location filename="../qsnxwindow.cpp" line="+227"/>
         <location line="+7"/>
         <source>Connect</source>
         <translation type="unfinished">Соединиться</translation>
@@ -133,7 +133,7 @@
 <context>
     <name>SNXSystemTrayIcon</name>
     <message>
-        <location filename="../qsnxwindow.cpp" line="-215"/>
+        <location filename="../qsnxwindow.cpp" line="-216"/>
         <source>Show window</source>
         <translation type="unfinished">Показать окно</translation>
     </message>

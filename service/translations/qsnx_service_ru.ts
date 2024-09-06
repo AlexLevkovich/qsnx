@@ -4,7 +4,7 @@
 <context>
     <name>SNXProcess</name>
     <message>
-        <location filename="../qsnxservice.cpp" line="+99"/>
+        <location filename="../qsnxservice.cpp" line="+100"/>
         <source>SNX process exited on its own will</source>
         <translation type="unfinished">Процесс snx упал по собственному желанию</translation>
     </message>
@@ -22,7 +22,7 @@
 <context>
     <name>QSNXService</name>
     <message>
-        <location line="+111"/>
+        <location line="+133"/>
         <source> is already running. Stop or kill it first.</source>
         <translation type="unfinished"> уже работает. Сначала остановите или убейте его.</translation>
     </message>

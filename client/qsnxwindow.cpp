@@ -102,7 +102,7 @@ void SNXSystemTrayIcon::recreate_connect_menu() {
 
 void SNXSystemTrayIcon::show_main_window() {
     if (m_window != NULL) return;
-    m_window = new QSNXWindow();
+    m_window = new QSNXWindow(&m_client);
     m_window->show();
     QObject::connect(m_window,&QSNXWindow::connect_pressed,this,&SNXSystemTrayIcon::connect);
     QObject::connect(m_window,&QSNXWindow::disconnect_pressed,this,&SNXSystemTrayIcon::disconnect);
@@ -130,8 +130,8 @@ void SNXSystemTrayIcon::connect(const QString & name) {
     disconnect_action->setEnabled(false);
     emit connecting();
     Profile profile(name);
-    if (profile.isUserPassword()) m_client.connect(profile.site(),profile.userName(),profile.password(),profile.port());
-    else m_client.connect(profile.site(),profile.certificate(),profile.port());
+    if (profile.isUserPassword()) m_client.connect(profile.site(),profile.userName(),profile.password(),profile.isBackwardCompatabilityEnabled(),profile.port());
+    else m_client.connect(profile.site(),profile.certificate(),profile.isBackwardCompatabilityEnabled(),profile.port());
 }
 
 void SNXSystemTrayIcon::disconnect() {
@@ -163,7 +163,8 @@ void QSNXWindow::showTray() {
     (m_tray_icon = new SNXSystemTrayIcon())->show();
 }
 
-QSNXWindow::QSNXWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::QSNXWindow) {
+QSNXWindow::QSNXWindow(QSNXClient * client,QWidget *parent) : QMainWindow(parent) , ui(new Ui::QSNXWindow) {
+    m_client = client;
     ui->setupUi(this);
 
     ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-connect").pixmap(128)));
@@ -199,7 +200,7 @@ void QSNXWindow::closeEvent(QCloseEvent *event) {
 }
 
 void QSNXWindow::on_profilesButton_clicked() {
-    if (ProfileDialog(this).exec() == QDialog::Rejected) return;
+    if (ProfileDialog(m_client->hasBackwardCompabilityOption(),this).exec() == QDialog::Rejected) return;
     fill_profiles();
 }
 
