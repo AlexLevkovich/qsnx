@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     client \
-    service
+    service \
+    disconnect
