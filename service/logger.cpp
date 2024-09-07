@@ -38,7 +38,9 @@ QIODevice * Logger::device() {
     return logfile;
 }
 
-Logger::Logger() : QDebug(device()) {}
+Logger::Logger() : QDebug(device()) {
+    noquote();
+}
 
 Logger::~Logger() {
     if (logfile == NULL) return;

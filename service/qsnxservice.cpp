@@ -102,7 +102,7 @@ void SNXProcess::snx_forked() {
             m_dns_ips.clear();
             m_dns_suffixes.clear();
             m_connected_info.clear();
-            Logger().noquote() << "SNX process exited on its own will, trying to reconnect...";
+            Logger() << "SNX process exited on its own will, trying to reconnect...";
             QTimer::singleShot(1000,this,[=](){ start(); });
         }
         else {
@@ -289,12 +289,12 @@ QSNXService::QSNXService(QObject *parent) : QObject(parent) {
     new QSNXAdaptor(this);
     QDBusConnection dbus = QDBusConnection::systemBus();
     if (!dbus.registerObject("/", this)) {
-        Logger().noquote() << "Cannot register QSNXService object!" << dbus.lastError();
+        Logger() << "Cannot register QSNXService object!" << dbus.lastError();
         exit(1);
         return;
     }
     if (!dbus.registerService("com.alexl.qt.QSNX")) {
-        Logger().noquote() << "Cannot register QSNXService service!" << dbus.lastError();
+        Logger() << "Cannot register QSNXService service!" << dbus.lastError();
         exit(1);
         return;
     }
@@ -345,10 +345,10 @@ void QSNXService::start_process(SNXProcess * process) {
     QObject::connect(m_process,&SNXProcess::connecting,this,&QSNXService::connecting);
     QObject::connect(m_process,&SNXProcess::connected,this,&QSNXService::connected);
     QObject::connect(m_process,&SNXProcess::connected,this,[=]() {
-        Logger().noquote() << ("Connected to "+m_process->url());
-        Logger().noquote() << m_process->connnectedInfo();
+        Logger() << ("Connected to "+m_process->url());
+        Logger() << m_process->connnectedInfo();
         if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVECTL).exists()) return;
-        Logger().noquote() << "using systemd_resolved for dns...";
+        Logger() << "using systemd_resolved for dns...";
         QStringList args;
         args << RESOLVE_DNS_SWITCH << TUNIF;
         for (QString & ip: m_process->dnsIPs()) {
@@ -364,7 +364,7 @@ void QSNXService::start_process(SNXProcess * process) {
     });
     QObject::connect(m_process,&SNXProcess::disconnected,this,&QSNXService::disconnected);
     QObject::connect(m_process,&SNXProcess::disconnected,this,[=]() {
-        Logger().noquote() << "disconnected";
+        Logger() << "disconnected";
         m_process = NULL;
     });
     QObject::connect(m_process,&SNXProcess::errorOccurred,this,&QSNXService::error);
@@ -372,7 +372,7 @@ void QSNXService::start_process(SNXProcess * process) {
 }
 
 void QSNXService::disconnect() {
-    Logger().noquote() << "disconnecting by client...";
+    Logger() << "disconnecting by client...";
     if (m_process != NULL) m_process->setMaxConnectCount(1);
     (new SNXProcess(this))->startDetached();
 }
@@ -392,7 +392,7 @@ void QSNXService::sendPassword(const QString & password) {
 }
 
 void QSNXService::terminate() {
-    Logger().noquote() << "terminating by client...";
+    Logger() << "terminating by client...";
     if (m_process == NULL) return;
     m_process->terminate();
 }
