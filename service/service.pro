@@ -87,6 +87,7 @@ DBUS_ADAPTORS = ../qsnx.xml
 SOURCES += \
         kpty.cpp \
         kptydevice.cpp \
+        logger.cpp \
         main.cpp \
         qptyprocess.cpp \
         qsnxservice.cpp \
@@ -104,6 +105,7 @@ HEADERS += \
     kpty.h \
     kpty_p.h \
     kptydevice.h \
+    logger.h \
     qptyprocess.h \
     qsnxservice.h \
     sigwatch.h \

@@ -22,6 +22,8 @@ public:
     void terminate();
     bool isRunning() const;
     bool isConnected() const;
+    QString url() const;
+    QString ip() const;
     QStringList dnsSuffixes() const;
     QStringList dnsIPs() const;
     qint64 processId() const;
@@ -55,12 +57,14 @@ private:
     static const QString user_dir();
 
     QPtyProcess m_process;
+    QString m_url;
     QString m_password;
     QString m_username;
     QString m_certificate;
     QString m_connected_info;
-    QStringList dns_ips;
-    QStringList dns_suffixes;
+    QString m_ip;
+    QStringList m_dns_ips;
+    QStringList m_dns_suffixes;
     QString m_error;
     bool m_first_time;
     State m_state;

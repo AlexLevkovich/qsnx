@@ -3,6 +3,7 @@
 ** License:    GPL
 ********************************************************************************/
 #include "qsnxservice.h"
+#include "logger.h"
 #include "qsnx_adaptor.h"
 #include <signal.h>
 #include <QTemporaryFile>
@@ -11,6 +12,7 @@
 #include <QTimer>
 #include <QFileInfo>
 #include <QDirIterator>
+#include <QEventLoop>
 #include <QDebug>
 #include <unistd.h>
 #include <pwd.h>
@@ -26,6 +28,7 @@ SNXProcess::SNXProcess(QObject *parent) : QObject(parent) {
 
 SNXProcess::SNXProcess(const QString &url,const QString &certificate,int port,bool backward,QObject *parent) : QObject(parent) {
     init();
+    m_url = url;
     QStringList args;
     args << URL_SWITCH << url << CERTIFICATE_SWITCH << certificate << PORT_SWITCH << QString("%1").arg(port);
     if (backward) args << BACKWARD_SWITCH;
@@ -35,6 +38,7 @@ SNXProcess::SNXProcess(const QString &url,const QString &certificate,int port,bo
 
 SNXProcess::SNXProcess(const QString &url,const QString &username,const QString &password,int port,bool backward,QObject *parent) : QObject(parent) {
     init();
+    m_url = url;
     QStringList args;
     args << URL_SWITCH << url << USER_SWITCH << username << PORT_SWITCH << QString("%1").arg(port);
     if (backward) args << BACKWARD_SWITCH;
@@ -47,6 +51,10 @@ SNXProcess::~SNXProcess() {}
 
 QString SNXProcess::errorString() const {
     return m_error.isEmpty()?m_process.errorString():m_error;
+}
+
+QString SNXProcess::url() const {
+    return m_url;
 }
 
 const QString SNXProcess::user_dir() {
@@ -79,7 +87,7 @@ void SNXProcess::init() {
     connect(&m_process,&QProcess::errorOccurred,(QSNXService *)parent(),[=]{ emit ((QSNXService *)parent())->error(m_process.errorString()); });
     connect(&m_process,&QProcess::readyRead,this,[=]() { while (m_process.canReadLine()) analyze_line(m_process.readLine()); });
     connect(&m_process,&QProcess::errorOccurred,this,[=](){ emit errorOccurred(m_process.errorString()); });
-    connect(this,&SNXProcess::disconnected,this,[=](){ m_connect_counter = 0; m_state = Stopped; dns_ips.clear(); dns_suffixes.clear(); m_connected_info.clear(); deleteLater(); });
+    connect(this,&SNXProcess::disconnected,this,[=](){ m_connect_counter = 0; m_state = Stopped; m_ip=""; m_dns_ips.clear(); m_dns_suffixes.clear(); m_connected_info.clear(); deleteLater(); });
     connect(this,&SNXProcess::connecting,this,[=](){ m_state = Starting; m_connected_info.clear(); });
     connect(this,&SNXProcess::connected,this,[=](){ m_state = Started; });
 }
@@ -90,10 +98,11 @@ void SNXProcess::snx_forked() {
         if (m_connect_counter < m_max_connect_count) {
             m_connect_counter++;
             m_state = Stopped;
-            dns_ips.clear();
-            dns_suffixes.clear();
+            m_ip = "";
+            m_dns_ips.clear();
+            m_dns_suffixes.clear();
             m_connected_info.clear();
-            qDebug() << "SNX process exited on its own will, trying to reconnect...";
+            Logger().noquote() << "SNX process exited on its own will, trying to reconnect...";
             QTimer::singleShot(1000,this,[=](){ start(); });
         }
         else {
@@ -235,9 +244,10 @@ void SNXProcess::analyze_line(const QByteArray & array) {
     }
     else if (line == QLatin1String("SNX - connected.")) m_state = SortOfStarted;
     else {
-        if ((m_state == SortOfStarted) && (line.startsWith("DNS Server") || line.startsWith("Secondary DNS Server")) && line.contains(':')) dns_ips.append(line.split(':').at(1).trimmed());
+        if ((m_state == SortOfStarted) && (line.startsWith("DNS Server") || line.startsWith("Secondary DNS Server") || line.startsWith("Tertiary DNS Server")) && line.contains(':')) m_dns_ips.append(line.split(':').at(1).trimmed());
+        if ((m_state == SortOfStarted) && line.startsWith("Office Mode IP") && line.contains(':')) m_ip = line.split(':').at(1).trimmed();
         if ((m_state == SortOfStarted) && line.startsWith("DNS Suffix") && line.contains(':')) {
-            dns_suffixes.clear();
+            m_dns_suffixes.clear();
             for (QString & suffix: line.split(':').at(1).trimmed().split(';',
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
                                                                          Qt::SkipEmptyParts
@@ -245,7 +255,7 @@ void SNXProcess::analyze_line(const QByteArray & array) {
                                                                          QString::SkipEmptyParts
 #endif
                                                                          )) {
-                dns_suffixes.append(suffix.trimmed());
+                m_dns_suffixes.append(suffix.trimmed());
             }
         }
         m_connected_info += line + QLatin1Char('\n');
@@ -253,12 +263,16 @@ void SNXProcess::analyze_line(const QByteArray & array) {
     m_first_time = false;
 }
 
+QString SNXProcess::ip() const {
+    return m_ip;
+}
+
 QStringList SNXProcess::dnsSuffixes() const {
-    return dns_suffixes;
+    return m_dns_suffixes;
 }
 
 QStringList SNXProcess::dnsIPs() const {
-    return dns_ips;
+    return m_dns_ips;
 }
 
 qint64 SNXProcess::startDetached(const QString & pgm,const QStringList & args) {
@@ -275,12 +289,12 @@ QSNXService::QSNXService(QObject *parent) : QObject(parent) {
     new QSNXAdaptor(this);
     QDBusConnection dbus = QDBusConnection::systemBus();
     if (!dbus.registerObject("/", this)) {
-        qDebug() << "Cannot register QSNXService object!" << dbus.lastError();
+        Logger().noquote() << "Cannot register QSNXService object!" << dbus.lastError();
         exit(1);
         return;
     }
     if (!dbus.registerService("com.alexl.qt.QSNX")) {
-        qDebug() << "Cannot register QSNXService service!" << dbus.lastError();
+        Logger().noquote() << "Cannot register QSNXService service!" << dbus.lastError();
         exit(1);
         return;
     }
@@ -331,8 +345,10 @@ void QSNXService::start_process(SNXProcess * process) {
     QObject::connect(m_process,&SNXProcess::connecting,this,&QSNXService::connecting);
     QObject::connect(m_process,&SNXProcess::connected,this,&QSNXService::connected);
     QObject::connect(m_process,&SNXProcess::connected,this,[=]() {
+        Logger().noquote() << ("Connected to "+m_process->url());
+        Logger().noquote() << m_process->connnectedInfo();
         if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVECTL).exists()) return;
-        qDebug() << "using systemd_resolved for dns...";
+        Logger().noquote() << "using systemd_resolved for dns...";
         QStringList args;
         args << RESOLVE_DNS_SWITCH << TUNIF;
         for (QString & ip: m_process->dnsIPs()) {
@@ -348,7 +364,7 @@ void QSNXService::start_process(SNXProcess * process) {
     });
     QObject::connect(m_process,&SNXProcess::disconnected,this,&QSNXService::disconnected);
     QObject::connect(m_process,&SNXProcess::disconnected,this,[=]() {
-        qDebug() << "disconnected";
+        Logger().noquote() << "disconnected";
         m_process = NULL;
     });
     QObject::connect(m_process,&SNXProcess::errorOccurred,this,&QSNXService::error);
@@ -356,7 +372,7 @@ void QSNXService::start_process(SNXProcess * process) {
 }
 
 void QSNXService::disconnect() {
-    qDebug() << "disconnecting by client...";
+    Logger().noquote() << "disconnecting by client...";
     if (m_process != NULL) m_process->setMaxConnectCount(1);
     (new SNXProcess(this))->startDetached();
 }
@@ -376,7 +392,7 @@ void QSNXService::sendPassword(const QString & password) {
 }
 
 void QSNXService::terminate() {
-    qDebug() << "terminating by client...";
+    Logger().noquote() << "terminating by client...";
     if (m_process == NULL) return;
     m_process->terminate();
 }
