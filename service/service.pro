@@ -38,16 +38,6 @@ isEmpty(USER_SWITCH) {
 }
 DEFINES += USER_SWITCH=\\\"$$USER_SWITCH\\\"
 
-isEmpty(RESOLVE_DNS_SWITCH) {
-    RESOLVE_DNS_SWITCH = dns
-}
-DEFINES += RESOLVE_DNS_SWITCH=\\\"$$RESOLVE_DNS_SWITCH\\\"
-
-isEmpty(RESOLVE_DOMAIN_SWITCH) {
-    RESOLVE_DOMAIN_SWITCH = domain
-}
-DEFINES += RESOLVE_DOMAIN_SWITCH=\\\"$$RESOLVE_DOMAIN_SWITCH\\\"
-
 isEmpty(TUNIF) {
     TUNIF = tunsnx
 }
@@ -57,16 +47,6 @@ isEmpty(TMP_DIR) {
     TMP_DIR = /tmp
 }
 DEFINES += TMP_DIR=\\\"$$TMP_DIR\\\"
-
-isEmpty(SYSTEMD_RESOLVED) {
-    SYSTEMD_RESOLVED = $$INSTALL_PREFIX/lib/systemd/systemd-resolved
-}
-DEFINES += SYSTEMD_RESOLVED=\\\"$$SYSTEMD_RESOLVED\\\"
-
-isEmpty(SYSTEMD_RESOLVECTL) {
-    SYSTEMD_RESOLVECTL = $$INSTALL_PREFIX/bin/resolvectl
-}
-DEFINES += SYSTEMD_RESOLVECTL=\\\"$$SYSTEMD_RESOLVECTL\\\"
 
 TRANS_DIR1 = $$OUT_PWD/translations
 TRANS_DIR2 = $$INSTALL_PREFIX/share/qsnx
@@ -93,7 +73,9 @@ SOURCES += \
         qsnxservice.cpp \
         sigwatch.cpp \
         singleapplication.cpp \
-        singleapplication_p.cpp
+        singleapplication_p.cpp \
+        systemd_resolved_types.cpp \
+        systemdresolved.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -110,7 +92,12 @@ HEADERS += \
     qsnxservice.h \
     sigwatch.h \
     singleapplication.h \
-    singleapplication_p.h
+    singleapplication_p.h \
+    systemd_resolved_types.h \
+    systemdresolved.h
+
+DBUS_INTERFACES = org.freedesktop.resolve1.Manager.xml
+QDBUSXML2CPP_INTERFACE_HEADER_FLAGS += -i systemd_resolved_types.h
 
 LIBS += -lutil
 

@@ -18,6 +18,7 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <stdio.h>
+#include "systemdresolved.h"
 
 const int SNXProcess::MAX_CONNECT_COUNT = 10;
 
@@ -347,20 +348,13 @@ void QSNXService::start_process(SNXProcess * process) {
     QObject::connect(m_process,&SNXProcess::connected,this,[=]() {
         Logger() << ("Connected to "+m_process->url());
         Logger() << m_process->connnectedInfo();
-        if (SNXProcess::processId(SYSTEMD_RESOLVED) <= 0 || !QFile(SYSTEMD_RESOLVECTL).exists()) return;
-        Logger() << "using systemd_resolved for dns...";
-        QStringList args;
-        args << RESOLVE_DNS_SWITCH << TUNIF;
-        for (QString & ip: m_process->dnsIPs()) {
-            args << ip;
+        SystemdResolved resolved(TUNIF);
+        if (resolved.isValid()) {
+            Logger() << "using systemd_resolved for dns...";
+            resolved.SetLinkDNS(dnsArrayFromStrings(m_process->dnsIPs()));
+            resolved.SetLinkDomains(domainArrayFromStrings(m_process->dnsSuffixes()));
         }
-        SNXProcess::startDetached(SYSTEMD_RESOLVECTL,args);
-        args.clear();
-        args << RESOLVE_DOMAIN_SWITCH << TUNIF;
-        for (QString & suffix: m_process->dnsSuffixes()) {
-            args << suffix;
-        }
-        SNXProcess::startDetached(SYSTEMD_RESOLVECTL,args);
+        else Logger() << "it seems systemd_resolved is not started!";
     });
     QObject::connect(m_process,&SNXProcess::disconnected,this,&QSNXService::disconnected);
     QObject::connect(m_process,&SNXProcess::disconnected,this,[=]() {

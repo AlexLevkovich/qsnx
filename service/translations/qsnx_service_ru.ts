@@ -4,7 +4,7 @@
 <context>
     <name>SNXProcess</name>
     <message>
-        <location filename="../qsnxservice.cpp" line="+109"/>
+        <location filename="../qsnxservice.cpp" line="+110"/>
         <source>SNX process exited on its own will</source>
         <translation type="unfinished">Процесс snx упал по собственному желанию</translation>
     </message>
