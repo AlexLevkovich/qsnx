@@ -64,12 +64,15 @@ SNXSystemTrayIcon::SNXSystemTrayIcon() : QSystemTrayIcon(QCoreApplication::insta
     QObject::connect(&m_client,&QSNXClient::error,this,[=](const QString & str) {
         QMessageBox::critical(NULL,tr("snx returned the error"),str);
     });
-    QObject::connect(&m_client,&QSNXClient::connected,this,[=]() {
+    QObject::connect(&m_client,&QSNXClient::connected,this,[=](const QString &ip, const QStringList &dns_ips, const QStringList &dns_suffixes) {
         m_state = Connected;
         setIcon(QIcon(QIcon("://pics/key.svg").pixmap(128)));
         setToolTip("QSNX Client : "+tr("connected to ")+m_profile_name);
         connect_menu->setEnabled(false);
         disconnect_action->setEnabled(true);
+        m_ip = ip;
+        m_dns_ips = dns_ips;
+        m_dns_suffixes = dns_suffixes;
         emit connected();
     });
     QObject::connect(&m_client,&QSNXClient::disconnected,this,[=]() {
@@ -151,7 +154,12 @@ bool SNXSystemTrayIcon::isDisconnecting() const {
     return (m_state == Disconnecting);
 }
 
-bool SNXSystemTrayIcon::isConnected() const {
+bool SNXSystemTrayIcon::isConnected(QString * ip,QStringList * dns_ips,QStringList * dns_suffixes) const {
+    if (m_state == Connected) {
+        if (ip != NULL) *ip = m_ip;
+        if (dns_ips != NULL) *dns_ips = m_dns_ips;
+        if (dns_suffixes != NULL) *dns_suffixes = m_dns_suffixes;
+    }
     return (m_state == Connected);
 }
 
@@ -200,8 +208,16 @@ void QSNXWindow::closeEvent(QCloseEvent *event) {
 }
 
 void QSNXWindow::on_profilesButton_clicked() {
-    if (ProfileDialog(m_client->hasBackwardCompabilityOption(),this).exec() == QDialog::Rejected) return;
-    fill_profiles();
+    QString ip;
+    QStringList dns_ips;
+    QStringList dns_suffixes;
+    if (m_tray_icon->isConnected(&ip,&dns_ips,&dns_suffixes)) {
+        QMessageBox::information(this,tr("Info about the current connection"),(QString::fromLocal8Bit("<html><head/><body><table border=\"0\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;\" cellspacing=\"2\" cellpadding=\"0\"><tr><td><p><span style=\" font-weight:600;\">")+tr("Office Mode IP")+QString::fromLocal8Bit("</span></p></td><td><p>%1</p></td></tr><tr><td><p><span style=\" font-weight:600;\">")+tr("DNS Addresses")+QString::fromLocal8Bit("</span></p></td><td><p>%2</p></td></tr><tr><td><p><span style=\" font-weight:600;\">")+tr("DNS Suffix")+QString::fromLocal8Bit("</span></p></td><td><p>%3</p></td></tr></table></body></html>")).arg(ip).arg(dns_ips.join("<br/>")).arg(dns_suffixes.join("<br/>")));
+    }
+    else {
+        if (ProfileDialog(m_client->hasBackwardCompabilityOption(),this).exec() == QDialog::Rejected) return;
+        fill_profiles();
+    }
 }
 
 void QSNXWindow::fill_profiles() {
@@ -219,7 +235,8 @@ void QSNXWindow::connected() {
     ui->connectButton->setEnabled(ui->profileCombo->count() > 0);
     ui->connectButton->setText(tr("Disconnect"));
     ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-disconnect").pixmap(128)));
-    ui->profilesButton->setEnabled(false);
+    ui->profilesButton->setEnabled(true);
+    ui->profilesButton->setToolTip(tr("Shows the connection info"));
 }
 
 void QSNXWindow::disconnected() {
@@ -227,6 +244,7 @@ void QSNXWindow::disconnected() {
     ui->connectButton->setText(tr("Connect"));
     ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-connect").pixmap(128)));
     ui->profilesButton->setEnabled(true);
+    ui->profilesButton->setToolTip(tr("The profile configurator"));
 }
 
 void QSNXWindow::connecting() {
@@ -234,6 +252,7 @@ void QSNXWindow::connecting() {
     ui->connectButton->setText(tr("Connect"));
     ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-connect").pixmap(128)));
     ui->profilesButton->setEnabled(false);
+    ui->profilesButton->setToolTip("");
 }
 
 void QSNXWindow::disconnecting() {
@@ -241,4 +260,5 @@ void QSNXWindow::disconnecting() {
     ui->connectButton->setText(tr("Disconnect"));
     ui->connectButton->setIcon(QIcon(QIcon::fromTheme("network-disconnect").pixmap(128)));
     ui->profilesButton->setEnabled(false);
+    ui->profilesButton->setToolTip("");
 }

@@ -114,7 +114,7 @@ void SNXProcess::snx_forked() {
         return;
     }
 
-    emit connected();
+    emit connected(m_ip,m_dns_ips,m_dns_suffixes);
     QTimer * timer = new QTimer(this);
     timer->setInterval(2000);
     timer->setProperty("filename",QDir::separator()+QLatin1String("proc")+QDir::separator()+QString("%1").arg(pid));
@@ -373,11 +373,6 @@ void QSNXService::disconnect() {
 
 bool QSNXService::isConnected() {
     return (m_process != NULL && m_process->isConnected());
-}
-
-QString QSNXService::sessionInfo() {
-    if (m_process == NULL) return QString();
-    return m_process->connnectedInfo();
 }
 
 void QSNXService::sendPassword(const QString & password) {

@@ -18,7 +18,6 @@ public:
     bool connect(const QString &url,const QString &username,const QString &password,bool backward,int port = 443);
     bool disconnect();
     bool isConnected() const;
-    QString sessionInfo() const;
     void sendPassword(const QString & password);
     void terminate();
     bool hasBackwardCompabilityOption() const;
@@ -26,7 +25,7 @@ public:
 signals:
     void passwordRequested();
     void connecting();
-    void connected();
+    void connected(const QString &ip, const QStringList &dns_ips, const QStringList &dns_suffixes);
     void disconnected();
     void error(const QString &str);
 

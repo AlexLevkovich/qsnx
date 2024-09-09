@@ -36,7 +36,7 @@ public:
 signals:
     void passwordRequested();
     void connecting();
-    void connected();
+    void connected(const QString & ip,const QStringList & dns_ips,const QStringList & dns_suffixes);
     void disconnected();
     void errorOccurred(const QString & error);
 
@@ -85,14 +85,13 @@ public slots:
     void connect(const QString &url,const QString &username,const QString &password,int port,bool backward);
     void disconnect();
     bool isConnected();
-    QString sessionInfo();
     void sendPassword(const QString & password);
     void terminate();
     bool hasBackwardCompabilityOption();
 signals:
     void passwordRequested();
     void connecting();
-    void connected();
+    void connected(const QString & ip,const QStringList & dns_ips,const QStringList & dns_suffixes);
     void disconnected();
     void error(const QString &str);
 

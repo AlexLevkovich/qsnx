@@ -6,6 +6,9 @@
     <signal name="connecting">
     </signal>
     <signal name="connected">
+      <arg direction="out" type="s" name="ip"/>
+      <arg direction="out" type="as" name="dns_ips"/>
+      <arg direction="out" type="as" name="dns_suffixes"/>
     </signal>
     <signal name="error">
       <arg direction="out" type="s" name="str"/>
@@ -35,9 +38,6 @@
     </method>
     <method name="isConnected">
       <arg type="b" direction="out"/>
-    </method>
-    <method name="sessionInfo">
-      <arg type="s" direction="out"/>
     </method>
     <method name="disconnect">
     </method>

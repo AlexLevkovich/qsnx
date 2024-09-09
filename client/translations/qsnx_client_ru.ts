@@ -98,13 +98,14 @@
     </message>
     <message>
         <location/>
-        <location filename="../qsnxwindow.cpp" line="+227"/>
-        <location line="+7"/>
+        <location filename="../qsnxwindow.cpp" line="+244"/>
+        <location line="+8"/>
         <source>Connect</source>
         <translation type="unfinished">Соединиться</translation>
     </message>
     <message>
         <location/>
+        <location filename="../qsnxwindow.cpp" line="-5"/>
         <source>The profile configurator</source>
         <translation type="unfinished">Конфигуратор профилей</translation>
     </message>
@@ -114,10 +115,35 @@
         <translation type="unfinished">О программе</translation>
     </message>
     <message>
-        <location filename="../qsnxwindow.cpp" line="-14"/>
+        <location filename="../qsnxwindow.cpp" line="-32"/>
+        <source>Info about the current connection</source>
+        <translation type="unfinished">Информация о текущем подключении</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Office Mode IP</source>
+        <translation type="unfinished">IP офисного режима</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>DNS Addresses</source>
+        <translation type="unfinished">DNS-адреса</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>DNS Suffix</source>
+        <translation type="unfinished">DNS-суффикс</translation>
+    </message>
+    <message>
         <location line="+21"/>
+        <location line="+24"/>
         <source>Disconnect</source>
         <translation type="unfinished">Отсоединиться</translation>
+    </message>
+    <message>
+        <location line="-21"/>
+        <source>Shows the connection info</source>
+        <translation type="unfinished">Показывает информацию о подключении</translation>
     </message>
 </context>
 <context>
@@ -133,7 +159,7 @@
 <context>
     <name>SNXSystemTrayIcon</name>
     <message>
-        <location filename="../qsnxwindow.cpp" line="-216"/>
+        <location filename="../qsnxwindow.cpp" line="-214"/>
         <source>Show window</source>
         <translation type="unfinished">Показать окно</translation>
     </message>
@@ -154,12 +180,12 @@
     </message>
     <message>
         <location line="+3"/>
-        <location line="+46"/>
+        <location line="+49"/>
         <source>disconnected</source>
         <translation type="unfinished">отсоединен</translation>
     </message>
     <message>
-        <location line="-28"/>
+        <location line="-31"/>
         <source>About QSNX Client...</source>
         <translation type="unfinished">Об QSNX Client...</translation>
     </message>
@@ -189,7 +215,7 @@
         <translation type="unfinished">подключен к </translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+26"/>
         <source>Connect to</source>
         <translation type="unfinished">Соединиться с</translation>
     </message>

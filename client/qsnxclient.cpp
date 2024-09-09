@@ -54,14 +54,6 @@ bool QSNXClient::hasBackwardCompabilityOption() const {
     return ret;
 }
 
-QString QSNXClient::sessionInfo() const {
-    if (!m_interface->isValid()) return QString();
-
-    QString ret;
-    if (replyToValue<QString>(m_interface->isConnected(),ret)) return ret;
-    return ret;
-}
-
 void QSNXClient::sendPassword(const QString & password) {
     if (!m_interface->isValid()) return;
 

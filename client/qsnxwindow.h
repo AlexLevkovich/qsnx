@@ -35,7 +35,7 @@ public:
     ~SNXSystemTrayIcon();
     bool isConnecting() const;
     bool isDisconnecting() const;
-    bool isConnected() const;
+    bool isConnected(QString * ip = NULL,QStringList * dns_ips = NULL,QStringList * dns_suffixes = NULL) const;
     bool isDisconnected() const;
 signals:
     void connected();
@@ -60,6 +60,9 @@ private:
     State m_state;
     QSNXClient m_client;
     QString m_profile_name;
+    QString m_ip;
+    QStringList m_dns_ips;
+    QStringList m_dns_suffixes;
 };
 
 class QSNXWindow : public QMainWindow {
