@@ -23,7 +23,7 @@
 const int SNXProcess::MAX_CONNECT_COUNT = 10;
 
 SNXProcess::SNXProcess(QObject *parent) : QObject(parent) {
-    init();
+    init(true);
     m_process.setArguments(QStringList() << DISCONNECT_SWITCH);
 }
 
@@ -74,7 +74,7 @@ void SNXProcess::setMaxConnectCount(int count) {
     m_max_connect_count = (count <= 0)?1:count;
 }
 
-void SNXProcess::init() {
+void SNXProcess::init(bool ondelete) {
     m_first_time = true;
     m_state = Stopped;
     m_connect_counter = 0;
@@ -84,13 +84,16 @@ void SNXProcess::init() {
         if (m_state == SortOfStarted) QTimer::singleShot(1000,this,[=]{ snx_forked(); });
         else emit disconnected();
     });
-    connect(&m_process,&QProcess::started,this,&SNXProcess::connecting);
-    connect(&m_process,&QProcess::errorOccurred,(QSNXService *)parent(),[=]{ emit ((QSNXService *)parent())->error(m_process.errorString()); });
-    connect(&m_process,&QProcess::readyRead,this,[=]() { while (m_process.canReadLine()) analyze_line(m_process.readLine()); });
-    connect(&m_process,&QProcess::errorOccurred,this,[=](){ emit errorOccurred(m_process.errorString()); });
     connect(this,&SNXProcess::disconnected,this,[=](){ m_connect_counter = 0; m_state = Stopped; m_ip=""; m_dns_ips.clear(); m_dns_suffixes.clear(); m_connected_info.clear(); deleteLater(); });
-    connect(this,&SNXProcess::connecting,this,[=](){ m_state = Starting; m_connected_info.clear(); });
-    connect(this,&SNXProcess::connected,this,[=](){ m_state = Started; });
+
+    if (!ondelete) {
+        connect(&m_process,&QProcess::started,this,&SNXProcess::connecting);
+        connect(&m_process,&QProcess::errorOccurred,(QSNXService *)parent(),[=]{ emit ((QSNXService *)parent())->error(m_process.errorString()); });
+        connect(&m_process,&QProcess::readyRead,this,[=]() { while (m_process.canReadLine()) analyze_line(m_process.readLine()); });
+        connect(&m_process,&QProcess::errorOccurred,this,[=](){ emit errorOccurred(m_process.errorString()); });
+        connect(this,&SNXProcess::connecting,this,[=](){ m_state = Starting; m_connected_info.clear(); });
+        connect(this,&SNXProcess::connected,this,[=](){ m_state = Started; });
+    }
 }
 
 void SNXProcess::snx_forked() {
@@ -183,11 +186,7 @@ bool SNXProcess::check_parameters() {
 }
 
 bool SNXProcess::startDetached() {
-    if (m_process.state() == QProcess::NotRunning) {
-        bool ret = m_process.startDetached();
-        if (ret) deleteLater();
-        return ret;
-    }
+    if (m_process.state() == QProcess::NotRunning) return m_process.startDetached();
     return false;
 }
 

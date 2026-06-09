@@ -4,7 +4,7 @@
 <context>
     <name>SNXProcess</name>
     <message>
-        <location filename="../qsnxservice.cpp" line="+110"/>
+        <location filename="../qsnxservice.cpp" line="+113"/>
         <source>SNX process exited on its own will</source>
         <translation type="unfinished">Процесс snx упал по собственному желанию</translation>
     </message>
@@ -14,7 +14,7 @@
         <translation type="unfinished">Имя пользователя и путь к файлу сертификата не могут быть одновременно пустыми!</translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+20"/>
         <source>Cannot start the second process!</source>
         <translation type="unfinished">Не удается запустить второй процесс!</translation>
     </message>
