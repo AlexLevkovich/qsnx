@@ -22,5 +22,6 @@ You can use **CONFIG+=DISCONNECT_SWITCH=value**, **CONFIG+=URL_SWITCH=value**, *
 **QT6 only**  
 
 Depends: '**Qt = 6: core,network,gui,dbus,widgets,svg**', '**snx**'. 
+Installing of systemd-resolved is recommended!
   
 
