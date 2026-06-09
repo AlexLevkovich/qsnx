@@ -1,4 +1,4 @@
-# QSNX v1.1
+# QSNX v1.2
 **snx** is GUI to proprietary Check Point's SNX VPN client.  
 
 It contains four subprojects:  
@@ -21,6 +21,6 @@ You can use **CONFIG+=DISCONNECT_SWITCH=value**, **CONFIG+=URL_SWITCH=value**, *
 
 **QT5 only**  
 
-Depends: '**Qt >= 5: core,network,gui,dbus,widgets,svg**', '**snx**'. 
+Depends: '**Qt = 6: core,network,gui,dbus,widgets,svg**', '**snx**'. 
   
 
