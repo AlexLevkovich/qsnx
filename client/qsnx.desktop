@@ -3,7 +3,7 @@
 Categories=Network;Dialup;
 Comment=GUI to snx
 Exec=qsnx_client
-Icon=key
+Icon=qsnx_client
 Name=QSNX Client
 StartupNotify=false
 Terminal=false

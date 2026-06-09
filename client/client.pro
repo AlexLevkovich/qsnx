@@ -92,7 +92,7 @@ transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
 transinstall.CONFIG += no_check_exist
 transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
-icon.files = $$PWD/pics/key.svg
+icon.files = $$PWD/pics/qsnx_client.svg
 icon.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/pixmaps/
 
 desktop.files = $$PWD/qsnx.desktop

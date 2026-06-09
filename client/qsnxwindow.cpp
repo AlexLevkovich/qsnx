@@ -66,7 +66,7 @@ SNXSystemTrayIcon::SNXSystemTrayIcon() : QSystemTrayIcon(QCoreApplication::insta
     });
     QObject::connect(&m_client,&QSNXClient::connected,this,[=](const QString &ip, const QStringList &dns_ips, const QStringList &dns_suffixes) {
         m_state = Connected;
-        setIcon(QIcon(QIcon("://pics/key.svg").pixmap(128)));
+        setIcon(QIcon(QIcon("://pics/qsnx_client.svg").pixmap(128)));
         setToolTip("QSNX Client : "+tr("connected to ")+m_profile_name);
         connect_menu->setEnabled(false);
         disconnect_action->setEnabled(true);

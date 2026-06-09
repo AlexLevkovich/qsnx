@@ -10,6 +10,7 @@
 int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName("AlexL");
     QCoreApplication::setApplicationName("qsnx_client");
+    QGuiApplication::setDesktopFileName("qsnx");
 
     SingleApplication app(argc, argv,false,SingleApplication::System);
     QIcon::setThemeName(QIcon::themeName());
