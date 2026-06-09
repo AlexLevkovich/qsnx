@@ -6,8 +6,7 @@
 #include "windowcenterer.h"
 #include <QWidget>
 #include <QEvent>
-#include <QDesktopWidget>
-#include <QApplication>
+#include <QGuiApplication>
 #include <QWindow>
 #include <QScreen>
 
@@ -19,7 +18,7 @@ bool WindowCenterer::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::Show) {
         QWidget * wnd = (QWidget *)obj;
         QWidget * parent = (QWidget *)wnd->parent();
-        if (parent == NULL || parent->isHidden()) wnd->move(QApplication::desktop()->window()->windowHandle()->screen()->geometry().center() - wnd->rect().center());
+        if (parent == NULL || parent->isHidden()) wnd->move(QGuiApplication::primaryScreen()->geometry().center() - wnd->rect().center());
         else wnd->move(parent->window()->frameGeometry().topLeft() + parent->window()->rect().center() - wnd->rect().center());
 
     }

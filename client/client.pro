@@ -3,7 +3,7 @@ TARGET = qsnx_client
 
 CONFIG += c++11
 DEFINES += QAPPLICATION_CLASS=QApplication
-DEFINES += VERSION=\\\"1.1\\\"
+DEFINES += VERSION=\\\"1.2\\\"
 
 isEmpty(INSTALL_PREFIX) {
     INSTALL_PREFIX = /usr

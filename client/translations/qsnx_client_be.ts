@@ -4,62 +4,50 @@
 <context>
     <name>ProfileDialog</name>
     <message>
-        <location filename="../profiledialog.ui"/>
         <source>Configuration of  the profiles</source>
         <translation type="unfinished">Канфігурацыя профіляў</translation>
     </message>
     <message>
-        <location/>
         <source>Creates the new profile</source>
         <translation type="unfinished">Стварае новы профіль</translation>
     </message>
     <message>
-        <location/>
         <source>Allows to rename the selected profile</source>
         <translation type="unfinished">Дазваляе выдаліць абраны профіль</translation>
     </message>
     <message>
-        <location/>
         <source>Deletes the selected profile</source>
         <translation type="unfinished">Выдаляе выбраны профіль</translation>
     </message>
     <message>
-        <location/>
         <source>Site</source>
         <translation type="unfinished">Сайт</translation>
     </message>
     <message>
-        <location/>
         <source>Port</source>
         <translation type="unfinished">Порт</translation>
     </message>
     <message>
-        <location/>
         <source>Use username and password</source>
         <translation type="unfinished">Выкарыстоўваць імя карыстальніка ды пароль</translation>
     </message>
     <message>
-        <location/>
         <source>Username</source>
         <translation type="unfinished">Імя карыстальніка</translation>
     </message>
     <message>
-        <location/>
         <source>Password</source>
         <translation type="unfinished">Пароль</translation>
     </message>
     <message>
-        <location/>
         <source>Use certificate file</source>
         <translation type="unfinished">Выкарыстоўваць файл сертыфіката</translation>
     </message>
     <message>
-        <location/>
         <source>Certificate</source>
         <translation type="unfinished">Сертыфікат</translation>
     </message>
     <message>
-        <location/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -79,7 +67,6 @@
         <translation type="unfinished">Усе файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../profiledialog.ui"/>
         <source>Backward compatability mode</source>
         <translation type="unfinished">Рэжым зваротнай сумяшчальнасці</translation>
     </message>
@@ -87,30 +74,25 @@
 <context>
     <name>QSNXWindow</name>
     <message>
-        <location filename="../qsnxwindow.ui"/>
         <source>Check Point SNX Client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location/>
         <source>Profile</source>
         <translation type="unfinished">Профіль</translation>
     </message>
     <message>
-        <location/>
         <location filename="../qsnxwindow.cpp" line="+244"/>
         <location line="+8"/>
         <source>Connect</source>
         <translation type="unfinished">Злучыцца</translation>
     </message>
     <message>
-        <location/>
         <location filename="../qsnxwindow.cpp" line="-5"/>
         <source>The profile configurator</source>
         <translation type="unfinished">Канфігуратар профіляў</translation>
     </message>
     <message>
-        <location/>
         <source>About program</source>
         <translation type="unfinished">Аб праграме</translation>
     </message>

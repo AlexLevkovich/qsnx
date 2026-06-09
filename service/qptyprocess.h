@@ -27,10 +27,9 @@ public:
     bool reset() override;
     bool seek(qint64 pos) override;
     qint64 size() const override;
-    bool open(QIODevice::OpenMode mode = QIODevice::ReadWrite) override;
+    bool open(QIODeviceBase::OpenMode mode = QIODeviceBase::ReadWrite) override;
 
 protected:
-    void setupChildProcess() override;
     qint64 readData(char *data, qint64 maxlen) override;
     qint64 writeData(const char *data, qint64 len) override;
     qint64 readLineData(char *data, qint64 maxSize) override;

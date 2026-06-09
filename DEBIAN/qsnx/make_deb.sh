@@ -17,7 +17,7 @@ die() {
 cd $basedir
 [[ -f "$basedir/control" ]] || die "No control file found!"
 
-qmake=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+qmake=/usr/bin/qmake6
 proname=qsnx
 version=`cat control | grep "Version:" | awk '{print $2}'`
 threadcount=`cat /proc/cpuinfo | grep "processor" | tail -n1 | awk '{print $3+1}'`

@@ -28,6 +28,14 @@ QPtyProcess::QPtyProcess(int ptyMasterFd, QObject *parent) : QProcess(parent) {
         m_pty->open(ptyMasterFd);
     }
 
+    setChildProcessModifier([this]() {
+        m_pty->setCTty();
+        m_pty->login(user_name().toLocal8Bit().constData(),qgetenv("DISPLAY").constData());
+        dup2(m_pty->slaveFd(),0);
+        dup2(m_pty->slaveFd(),1);
+        dup2(m_pty->slaveFd(),2);
+    });
+
     connect(this,&QProcess::stateChanged,this,[this](QProcess::ProcessState state) {
         if (state == QProcess::NotRunning) m_pty->logout();
     });
@@ -40,16 +48,6 @@ QPtyProcess::QPtyProcess(int ptyMasterFd, QObject *parent) : QProcess(parent) {
 
 QPtyProcess::~QPtyProcess() {
     if (state() != QProcess::NotRunning) m_pty->logout();
-}
-
-void QPtyProcess::setupChildProcess() {
-    m_pty->setCTty();
-    m_pty->login(user_name().toLocal8Bit().constData(),qgetenv("DISPLAY").constData());
-    dup2(m_pty->slaveFd(),0);
-    dup2(m_pty->slaveFd(),1);
-    dup2(m_pty->slaveFd(),2);
-
-    QProcess::setupChildProcess();
 }
 
 bool QPtyProcess::atEnd() const {
@@ -134,6 +132,6 @@ qint64 QPtyProcess::size() const {
     return m_pty->size();
 }
 
-bool QPtyProcess::open(QIODevice::OpenMode) {
-    return QProcess::open(QIODevice::ReadWrite);
+bool QPtyProcess::open(QIODeviceBase::OpenMode) {
+    return QProcess::open(QIODeviceBase::ReadWrite);
 }
