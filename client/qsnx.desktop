@@ -1,10 +1,10 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Categories=Network;Dialup;
 Comment=GUI to snx
 Exec=qsnx_client
 Icon=key
 Name=QSNX Client
-Path=.
 StartupNotify=false
 Terminal=false
 Type=Application
