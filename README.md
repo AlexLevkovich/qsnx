@@ -19,7 +19,7 @@ make install
 You can use **CONFIG+=DISCONNECT_SWITCH=value**, **CONFIG+=URL_SWITCH=value**, **CONFIG+=CERTIFICATE_SWITCH=value**, **CONFIG+=PORT_SWITCH=value**, **CONFIG+=USER_SWITCH=value** in qmake arguments if you need to use other snx switches  
 
 
-**QT5 only**  
+**QT6 only**  
 
 Depends: '**Qt = 6: core,network,gui,dbus,widgets,svg**', '**snx**'. 
   
